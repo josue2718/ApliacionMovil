@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "342429130116",
+    "project_id": "cateringmid",
+    "storage_bucket": "cateringmid.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342429130116:android:8a49b2b29c5e83d57ad1d1",
+        "android_client_info": {
+          "package_name": "com.cateringmid.miapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwXsvhwA4E6bQH3x3C3NZ-H-Fs3FqFN9Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
