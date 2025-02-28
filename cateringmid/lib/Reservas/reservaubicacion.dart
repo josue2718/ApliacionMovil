@@ -73,7 +73,7 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
 
  // chupala geovani
  // succionala 
- // chupala owsd
+ // chupala rico
 
   Future<void> _getUserLocation() async {
     try {
