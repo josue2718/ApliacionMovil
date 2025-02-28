@@ -1,0 +1,2 @@
+C:/CaterinMovil/ApliacionMovil/cateringmid/android/app/.cxx/Debug/1j5s122w/x86/CMakeFiles/edit_cache.dir
+C:/CaterinMovil/ApliacionMovil/cateringmid/android/app/.cxx/Debug/1j5s122w/x86/CMakeFiles/rebuild_cache.dir
