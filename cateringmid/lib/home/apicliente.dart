@@ -9,8 +9,6 @@ class Cliente {
   String nombre;
   String apellido;
   String telefono;
-  double latitud;
-  double longitud;
   String linkImagen;
   DateTime fechaDeCreacion;
 
@@ -21,8 +19,6 @@ class Cliente {
     required this.nombre,
     required this.apellido,
     required this.telefono,
-    required this.latitud,
-    required this.longitud,
     required this.linkImagen,
     required this.fechaDeCreacion,
   });
@@ -35,8 +31,6 @@ class Cliente {
       nombre: json['nombre'],
       apellido: json['apellido'],
       telefono: json['telefono'],
-      latitud: json['latitud'].toDouble(),
-      longitud: json['longitud'].toDouble(),
       linkImagen: json['link_imagen'],
       fechaDeCreacion: DateTime.parse(json['fecha_de_creacion']),
     );
@@ -57,6 +51,7 @@ class Apiclienteclass {
   bool hasMore = true;
 
   Future<void> fetchclienteData() async {
+    print("llamado");
   if (isLoading || !hasMore) return;
   final prefs = await SharedPreferences.getInstance();
   final id_cliente = prefs.getString('id');
@@ -82,10 +77,11 @@ class Apiclienteclass {
 
     print('Response status code: ${response.statusCode}');
     if (response.statusCode == 200) {
+
      final jsonResponse = json.decode(response.body);
       cliente.clear();
       cliente.add(Cliente.fromJson(jsonResponse));
-      print(cliente);
+
     } else if (response.statusCode == 401) {
       print('Token expirado, intentando renovar...');
     } else {

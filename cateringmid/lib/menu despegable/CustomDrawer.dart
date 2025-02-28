@@ -11,14 +11,12 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Apiclienteclass apicliente = Apiclienteclass(); // Instanciamos el servicio de cliente
-
     return Drawer(
       child: FutureBuilder<void>(
-        future: apicliente.fetchclienteData(),  // Suponemos que esta función obtiene los datos del cliente
+        future: apicliente.fetchclienteData(), 
         builder: (context, snapshot) {
             if (apicliente.cliente.isNotEmpty) {
               var apiclienteData = apicliente.cliente; // Accedemos a los datos del cliente
-
               return ListView(
                 padding: EdgeInsets.zero,
                 children: [

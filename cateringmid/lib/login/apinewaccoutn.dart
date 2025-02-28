@@ -52,9 +52,9 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
   final crear = Provider.of<CrearcuentaProvider>(context, listen: false);
   
   if (crear.imagen64!="" && crear.nameimagen!="") {
-    cuentasinimg(context);
-  } else {
     cuentaconimg(context);
+  } else {
+    cuentasinimg(context);
   }
 }
 
@@ -94,6 +94,7 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
     try {
       final crear = Provider.of<CrearcuentaProvider>(context, listen: false);
       
+      print(url);
 
         // 2. Crear el cliente
         final urlCliente = Uri.parse('https://cateringmidd.azurewebsites.net/api/Cliente');
