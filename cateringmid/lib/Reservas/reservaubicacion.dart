@@ -71,6 +71,8 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
     }
   } */
 
+ // chupala owsaldo
+
   Future<void> _getUserLocation() async {
     try {
       Position position = await LocationService.getCurrentLocation();
