@@ -1,3 +1,4 @@
+import 'package:cateringmid/Reservas/confirmacion.dart';
 import 'package:cateringmid/Reservas/reservamodelo.dart';
 import 'package:cateringmid/Reservas/reservaubicacion.dart';
 import 'dart:convert';
@@ -8,7 +9,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class LocationPickerScreen extends StatefulWidget {
-
+const LocationPickerScreen({super.key, required this.id_empresa});
+final String id_empresa;
   @override
   _LocationPickerScreenState createState() => _LocationPickerScreenState();
 }
@@ -43,14 +45,17 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
     );
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-            "Ubicación seleccionada: $direccion") ,
-            backgroundColor: Color(0xFF670A0A)
-      ),
-    );
-    Navigator.pop(context);
-  }
+        SnackBar(
+            content: Text("Ubicación seleccionada: $direccion"),
+            backgroundColor: Color(0xFF670A0A)),
+      );
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => confrimacionreserva(
+                  id_empresa: widget
+                      .id_empresa))); // Reemplaza `YourPage` con la página actual
+    }
 }
 
 

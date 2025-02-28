@@ -58,7 +58,7 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
   LatLng? selectedLocation;
   Position? userLocation;
 
-  void _onMarkerTapped() {
+ /* void _onMarkerTapped() {
     if (_formKey.currentState?.validate() ?? false) {
       Provider.of<ReservasProvider>(context, listen: false).actualizarDireccion(
           _usernamelocalController.text,
@@ -66,10 +66,10 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
           _userreferensController.text);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LocationPickerScreen()),
+        MaterialPageRoute(builder: (context) => LocationPickerScreen()), 
       );
     }
-  }
+  } */
 
   Future<void> _getUserLocation() async {
     try {
@@ -88,13 +88,10 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
           _usernamelocalController.text,
           _usernumberController.text,
           _userreferensController.text);
-
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => confrimacionreserva(
-                  id_empresa: widget
-                      .id_empresa))); // Reemplaza `YourPage` con la página actual
+        context,
+        MaterialPageRoute(builder: (context) => LocationPickerScreen(id_empresa: widget.id_empresa,)),
+      );
     }
   }
 
@@ -175,7 +172,6 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
                       _paso(),
                       const SizedBox(height: 20),
                       _datosentrega(),
-                      _datosubicacion(),
                       const SizedBox(height: 50),
                       ElevatedButton(
                         onPressed: _login,
@@ -378,7 +374,7 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
     ]);
   }
 
-  Widget _datosubicacion() {
+ /*  Widget _datosubicacion() {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       Container(
         alignment: Alignment.topLeft,
@@ -435,7 +431,7 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
         ]),
       ),
     ]);
-  }
+  } */
 
   Widget _paso() {
     return Padding(
