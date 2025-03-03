@@ -6,8 +6,10 @@ import 'login/login.dart';
 import 'login/apinewaccoutn.dart'; 
 import 'login/Createaccount.dart'; 
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 void main() {
     WidgetsFlutterBinding.ensureInitialized();
+   Stripe.publishableKey = 'pk_test_51QyhK8Fb8qYvObz7viMNWKSjHycljmPPZ7khhFPT0hWMYciV1HEgwRa9eMFh3FPQhpsgvB5AFeeRWcPLXTLxeSk400W4zvlNat';
   // Fijar orientación a solo vertical
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp, // Solo orientación vertical hacia arriba

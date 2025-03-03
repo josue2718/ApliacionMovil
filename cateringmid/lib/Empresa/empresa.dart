@@ -279,7 +279,7 @@ class _CompanyState extends State<CompanyPage> {
                       id_emp: empresa.idEmpresa,
                       mobiliario: empresa.mobiliario,
                       blancos: empresa.blancos,
-                      personal: empresa.chef,
+                      personal: empresa.personal,
                       cristaleria: empresa.cristaleria,
                       meseros: empresa.meseros,
                       chef: empresa.chef,

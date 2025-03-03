@@ -1,37 +1,31 @@
-import 'package:cateringmid/Reservas/confirmacion.dart';
-import 'package:cateringmid/Reservas/reservamodelo.dart';
-import 'package:cateringmid/Reservas/reservaubicacion.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:cateringmid/Empresa/empresa.dart';
+import 'package:cateringmid/home/api_mapemp.dart';
+import 'package:cateringmid/menu%20despegable/CustomDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 
 class LocationMap extends StatefulWidget {
-const LocationMap({super.key});
+  const LocationMap({super.key});
+
   @override
-  _LocationMap createState() => _LocationMap();
+  _LocationMapState createState() => _LocationMapState();
 }
 
-class _LocationMap extends State<LocationMap> {
+class _LocationMapState extends State<LocationMap> {
   late GoogleMapController mapController;
   LatLng? selectedLocation;
   Position? userLocation;
-
-
+  final ApiclassMapa mapa = ApiclassMapa();
+ 
 
   @override
   void initState() {
     super.initState();
     _getUserLocation();
+    mapa.fetchEmpresaData();
   }
-
-  void _guardar() async {
- 
-      
-}
-
 
   Future<void> _getUserLocation() async {
     try {
@@ -45,53 +39,76 @@ class _LocationMap extends State<LocationMap> {
     }
   }
 
-  void _onMapTap(LatLng tappedPoint) {
-    setState(() {
-      selectedLocation = tappedPoint;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-         final reservasProvider = Provider.of<ReservasProvider>(context, listen: false);
-         
-  
-         
     return Scaffold(
+     drawer: const CustomDrawer(),
       appBar: AppBar(
-            title: const Text('Empresas'),
-            backgroundColor: const Color(0xFF670A0A),
-            foregroundColor: Colors.white,
-            elevation: 0,
-            centerTitle: true,
-            toolbarHeight: 90,
-            
+        title: const Text('Empresas'),
+        backgroundColor: const Color(0xFF670A0A),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        toolbarHeight: 90,
+        actions: [
+          TextButton.icon(
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Notificaciones')),
+              );
+            },
+            icon: const Icon(
+              Icons.notifications,
+              color: Colors.white,
+              size: 30,
+            ),
+            label: Text(''),
           ),
+        ],
+      ),
       body: userLocation == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF670A0A),
+                  ),
+                )
           : GoogleMap(
               onMapCreated: (controller) => mapController = controller,
               initialCameraPosition: CameraPosition(
                 target: selectedLocation!,
-                zoom: 15,
+                zoom: 13,
               ),
-             markers: selectedLocation != null
-  ? {
-      Marker(
-        markerId: MarkerId("seleccionado"),
-        position: selectedLocation!,
-      ),
-    }
-  : <Marker>{},  // Aquí se especifica que es un Set<Marker>
-
-              onTap: _onMapTap,
+              markers: _crearMarcadores(),
             ),
-
-      
     );
   }
 
+  // Función para generar los marcadores de las empresas
+  Set<Marker> _crearMarcadores() {
+    return mapa.empresasmapa.map((empresa) {
+      print("Empresas en el mapa: ${mapa.empresasmapa}");
+
+      return Marker(
+        markerId: MarkerId(empresa.nombre),
+        position: LatLng(empresa.latitud, empresa.longitud),
+        infoWindow: InfoWindow(
+          title: empresa.nombre,
+          snippet: "Toque para ver más",
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CompanyPage(id_empresa: empresa.id_empresa,)),
+              );
+          },
+        ),
+      );
+    }).toSet();
+  }
+
+ 
 }
+
 class LocationService {
   static Future<Position> getCurrentLocation() async {
     bool serviceEnabled;

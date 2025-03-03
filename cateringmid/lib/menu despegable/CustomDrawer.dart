@@ -89,7 +89,7 @@ apicliente.fetchclienteData();
                 onTap: () => _navigateTo(context, MyHomePage()),
               ),
               _buildDrawerItem(
-                icon: Icons.room_service,
+                icon: Icons.location_on,
                 text: "Mapa de empresas",
                 onTap: () => _navigateTo(context,LocationMap()),
               ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cateringmid/Hreservas/apimireserva.dart';
+import 'package:cateringmid/Hreservas/pagoreserva.dart';
 
 import 'package:cateringmid/home/home.dart';
 import 'package:flutter/material.dart';
@@ -1233,7 +1234,15 @@ class Buttonclass extends StatelessWidget {
             ),
           if (!cancelado && !pago && !completado  && aceptado )
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                  Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PaymentPage(),
+                ),
+              );
+
+              },
               style: ElevatedButton.styleFrom(
                 fixedSize:
                     const Size(200, 50), // Ancho fijo de 250 y alto de 50
