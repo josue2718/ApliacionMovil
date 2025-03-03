@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cateringmid/home/Search.dart';
 import 'package:cateringmid/home/afertas.dart';
 import 'package:cateringmid/home/api_service.dart';
 import 'package:cateringmid/home/apicliente.dart';
@@ -50,36 +51,33 @@ class _MyHomePageScreenState extends State<MyHomePage> {
   }
 
   void checkAndReload() async {
-  if (api.empresas.isEmpty) {
-    pageNumber = 1;
-    print('Recargando datos porque la lista está vacía');
-    await api.fetchEmpresaData(pageNumber);
-    if (mounted) {
-      setState(() {});
+    if (api.empresas.isEmpty) {
+      pageNumber = 1;
+      print('Recargando datos porque la lista está vacía');
+      await api.fetchEmpresaData(pageNumber);
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
-}
-
 
   Future<void> _espetial(int tipo) async {
-  try {
-    await api.fetchEmpresatipo(tipo, 1);
-    setState(() {
-      api.loading = false; // Finaliza la carga
-    });
-  } catch (e) {
-    print("Error al cargar empresas del tipo: $e");
-    setState(() {
-      api.loading = false; // Finaliza la carga incluso si hay error
-    });
+    try {
+      await api.fetchEmpresatipo(tipo, 1);
+      setState(() {
+        api.loading = false; // Finaliza la carga
+      });
+    } catch (e) {
+      print("Error al cargar empresas del tipo: $e");
+      setState(() {
+        api.loading = false; // Finaliza la carga incluso si hay error
+      });
+    }
   }
-}
 
-   void _llamarEspetial(int tipo) {
+  void _llamarEspetial(int tipo) {
     _espetial(tipo);
-
   }
-
 
   @override
   void dispose() {
@@ -91,14 +89,11 @@ class _MyHomePageScreenState extends State<MyHomePage> {
   Future<void> _onRefresh() async {
     setState(() {
       print('Actualizando datos...');
-   
+
       api.fetchEmpresaData(pageNumber);
       hasMore = true;
     });
   }
-
-  // Función para cargar más datos de forma asíncrona
-  
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +102,9 @@ class _MyHomePageScreenState extends State<MyHomePage> {
         _backPressedCount++;
         if (_backPressedCount == 1) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Presione nuevamente para salir'),backgroundColor: Color(0xFF670A0A)),
+            const SnackBar(
+                content: Text('Presione nuevamente para salir'),
+                backgroundColor: Color(0xFF670A0A)),
           );
 
           Future.delayed(const Duration(seconds: 2), () {
@@ -123,41 +120,39 @@ class _MyHomePageScreenState extends State<MyHomePage> {
       },
       child: KeyboardDismisser(
         child: Scaffold(
-            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-            body: FutureBuilder(
-             future: Future.wait([
-              
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          body: FutureBuilder(
+            future: Future.wait([
               apides.fetchDescuentosData(),
             ]),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: Color(0xFF670A0A),
-                      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFF670A0A),
+                    backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                  ),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: \${snapshot.error}'));
+              }
+              if (api.empresas.isEmpty) {
+                Center(child: Text(''));
+                print('recargando home');
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Recargando'),
+                      backgroundColor: Color(0xFF670A0A),
+                      duration: const Duration(seconds: 1),
                     ),
                   );
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: \${snapshot.error}'));
-                }
-                if (api.empresas.isEmpty) {
-                 Center(child: Text(''));
-                  print('recargando home');
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Recargando'),
-                        backgroundColor: Color(0xFF670A0A),
-                         duration: const Duration(seconds: 1), 
-                      ),
-                    );
-                  });
-                  checkAndReload();
-                  return Center(child: Text(''));
-                  
-                }
-                return Scaffold(
+                });
+                checkAndReload();
+                return Center(child: Text(''));
+              }
+              return Scaffold(
                 drawer: const CustomDrawer(),
                 appBar: AppBar(
                   title: const Text('HOME'),
@@ -188,23 +183,51 @@ class _MyHomePageScreenState extends State<MyHomePage> {
                   child: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                      horizontal: 0, vertical: 0),
+                      horizontal: 10, vertical: 0),
                       child: Column(
                         children: [
-                          const SizedBox(height: 16),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: Container(
-                                alignment: Alignment.topLeft,
-                                child: const Text(
-                                'Ofertas de Hoy',
-                                style: TextStyle(
-                                fontSize: 25,
-                                color:  Color(0xFF670A0A),
-                                fontWeight: FontWeight.bold,
-                              ),
+                          const SizedBox(height: 20),
+                          TextField(
+                            readOnly:
+                                true, // Evita que el teclado se abra directamente
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SearchPage()),
+                              );
+                            },
+                          decoration: InputDecoration(
+                            labelText: "Buscar",
+                            prefixIcon: Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30), // Ajusta el radio según necesites
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide(color: Colors.grey), // Color del borde cuando está inactivo
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide(color:  Color(0xFF670A0A), width: 2), // Borde cuando está activo
                             ),
                           ),
+
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Container(
+                              alignment: Alignment.topLeft,
+                              child: const Text(
+                                'Ofertas de Hoy',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  color: Color(0xFF670A0A),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 16),
                           SizedBox(
@@ -270,25 +293,25 @@ class _MyHomePageScreenState extends State<MyHomePage> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: Container(
+                            child: Container(
                               alignment: Alignment.center,
                               child: const Text(
-                              'Especialidades',
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: Color(0xFF670A0A),
-                                fontWeight: FontWeight.bold,
+                                'Especialidades',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  color: Color(0xFF670A0A),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                          ),
                           Options(onEspecialidadSelected: _llamarEspetial),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Container(
                               alignment: Alignment.topLeft,
                               child: const Text(
                                 'Caterings',
@@ -303,7 +326,8 @@ class _MyHomePageScreenState extends State<MyHomePage> {
                           const SizedBox(height: 0),
                           ListView.builder(
                             controller: _scrollController,
-                            itemCount: api.empresas.length + (isLoading ? 1 : 0),
+                            itemCount:
+                                api.empresas.length + (isLoading ? 1 : 0),
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
@@ -340,7 +364,6 @@ class _MyHomePageScreenState extends State<MyHomePage> {
       ),
     );
   }
-  
 }
 
 class CardsEmpresa extends StatelessWidget {
@@ -349,7 +372,9 @@ class CardsEmpresa extends StatelessWidget {
       required this.nombre,
       required this.min,
       required this.max,
-      required this.id_emp,required this.estrella,required this.premin});
+      required this.id_emp,
+      required this.estrella,
+      required this.premin});
   final String link_logo;
   final String nombre;
   final int min;
@@ -361,14 +386,14 @@ class CardsEmpresa extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
         child: Card(
           elevation: 5,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
           color: const Color.fromARGB(255, 255, 255, 255),
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
           child: InkWell(
             onTap: () {
               Navigator.push(
@@ -402,7 +427,7 @@ class CardsEmpresa extends StatelessWidget {
                                   ? loadingProgress.cumulativeBytesLoaded /
                                       loadingProgress.expectedTotalBytes!
                                   : null,
-                                  color: Color(0xFF670A0A),
+                              color: Color(0xFF670A0A),
                             ),
                           );
                         },
@@ -419,22 +444,22 @@ class CardsEmpresa extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          nombre, // Usamos la variable que corresponde a la empresa
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold, 
-                                  ),
-                                  maxLines: 1, // Limita el texto a una sola línea
-                                  overflow: TextOverflow.ellipsis
-                        ),
+                            nombre, // Usamos la variable que corresponde a la empresa
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                            maxLines: 1, // Limita el texto a una sola línea
+                            overflow: TextOverflow.ellipsis),
                         const SizedBox(height: 10),
-                        Row
-                        (children: [
+                        Row(children: [
                           Icon(
-                            Icons.groups_sharp ,
-                           color: Color.fromARGB(197, 112, 103, 103),
-                            size:25,
+                            Icons.groups_sharp,
+                            color: Color.fromARGB(197, 112, 103, 103),
+                            size: 25,
                           ),
                           SizedBox(width: 10),
                           Text(
@@ -447,12 +472,11 @@ class CardsEmpresa extends StatelessWidget {
                           ),
                         ]),
                         SizedBox(height: 2),
-                         Row
-                        (children: [
+                        Row(children: [
                           Icon(
-                            Icons.room_service ,
-                           color: Color.fromARGB(197, 112, 103, 103),
-                            size:25,
+                            Icons.room_service,
+                            color: Color.fromARGB(197, 112, 103, 103),
+                            size: 25,
                           ),
                           SizedBox(width: 10),
                           Text(
@@ -465,12 +489,11 @@ class CardsEmpresa extends StatelessWidget {
                           ),
                         ]),
                         SizedBox(height: 2),
-                        Row
-                        (children: [
+                        Row(children: [
                           Icon(
-                            Icons.star_rounded ,
+                            Icons.star_rounded,
                             color: Color.fromARGB(197, 184, 166, 3),
-                            size:23,
+                            size: 23,
                           ),
                           SizedBox(width: 10),
                           Text(
@@ -529,117 +552,123 @@ class Options extends StatelessWidget {
       ),
       child: ListView(scrollDirection: Axis.horizontal, children: <Widget>[
         InkWell(
-        onTap:  () => onEspecialidadSelected(1),
-        child:
-        Padding(
-          padding: const EdgeInsets.only(right: 0),
-          child: Column(
-            children: [
-              ClipOval(
-                child: Image.asset(
-                  'assets/incono.png',
-                  fit: BoxFit.cover,
-                  width: 70, // Ajusta el ancho según tus necesidades
-                  height: 70, //
-                ), 
-              ),
-              const SizedBox(height: 20), // Espacio entre la imagen y el texto
-              Text('Bodas'),
-            ],
-          ),
-        ),
-        ),
-        SizedBox(width: 20,),
-        InkWell(
-         onTap:  () => onEspecialidadSelected(2),
-        child:
-        Padding(
-          padding: const EdgeInsets.only(right: 0),
-          child: Column(
-            children: [
-              ClipOval(
-                child: Image.asset(
-                  'assets/incono.png',
-                  fit: BoxFit.cover,
-                  width: 70, // Ajusta el ancho según tus necesidades
-                  height: 70, //
+          onTap: () => onEspecialidadSelected(1),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 0),
+            child: Column(
+              children: [
+                ClipOval(
+                  child: Image.asset(
+                    'assets/incono.png',
+                    fit: BoxFit.cover,
+                    width: 70, // Ajusta el ancho según tus necesidades
+                    height: 70, //
+                  ),
                 ),
-                
-              ),
-              const SizedBox(height: 20), // Espacio entre la imagen y el texto
-              Text('XV años'),
-            ],
+                const SizedBox(
+                    height: 20), // Espacio entre la imagen y el texto
+                Text('Bodas'),
+              ],
+            ),
           ),
         ),
+        SizedBox(
+          width: 20,
         ),
-        SizedBox(width: 20,),
         InkWell(
-        onTap:  () => onEspecialidadSelected(3),
-        child:
-        Padding(
-          padding: const EdgeInsets.only(right: 0),
-          child: Column(
-            children: [
-              ClipOval(
-                child: Image.asset(
-                  'assets/incono.png',
-                  fit: BoxFit.cover,
-                  width: 70, // Ajusta el ancho según tus necesidades
-                  height: 70, //
-                ), 
-              ),
-              const SizedBox(height: 20), // Espacio entre la imagen y el texto
-              Text('Eventos'),
-            ],
+          onTap: () => onEspecialidadSelected(2),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 0),
+            child: Column(
+              children: [
+                ClipOval(
+                  child: Image.asset(
+                    'assets/incono.png',
+                    fit: BoxFit.cover,
+                    width: 70, // Ajusta el ancho según tus necesidades
+                    height: 70, //
+                  ),
+                ),
+                const SizedBox(
+                    height: 20), // Espacio entre la imagen y el texto
+                Text('XV años'),
+              ],
+            ),
           ),
         ),
-        ),SizedBox(width: 20,),
-        
+        SizedBox(
+          width: 20,
+        ),
         InkWell(
-        onTap:  () => onEspecialidadSelected(4),
-        child:
-        Padding(
-          padding: const EdgeInsets.only(right: 0),
-          child: Column(
-            children: [
-              ClipOval(
-                child: Image.asset(
-                  'assets/incono.png',
-                  fit: BoxFit.cover,
-                  width: 70, // Ajusta el ancho según tus necesidades
-                  height: 70, //
-                ), 
-              ),
-              const SizedBox(height: 20), // Espacio entre la imagen y el texto
-              Text('Cumpleaños'),
-            ],
+          onTap: () => onEspecialidadSelected(3),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 0),
+            child: Column(
+              children: [
+                ClipOval(
+                  child: Image.asset(
+                    'assets/incono.png',
+                    fit: BoxFit.cover,
+                    width: 70, // Ajusta el ancho según tus necesidades
+                    height: 70, //
+                  ),
+                ),
+                const SizedBox(
+                    height: 20), // Espacio entre la imagen y el texto
+                Text('Eventos'),
+              ],
+            ),
           ),
         ),
+        SizedBox(
+          width: 20,
         ),
-        SizedBox(width: 20,),
         InkWell(
-        onTap:  () => onEspecialidadSelected(5),
-        child:
-        Padding(
-          padding: const EdgeInsets.only(right: 0),
-          child: Column(
-            children: [
-              ClipOval(
-                child: Image.asset(
-                  'assets/incono.png',
-                  fit: BoxFit.cover,
-                  width: 70, // Ajusta el ancho según tus necesidades
-                  height: 70, //
-                ), 
-              ),
-              const SizedBox(height: 20), // Espacio entre la imagen y el texto
-              Text('Otros'),
-            ],
+          onTap: () => onEspecialidadSelected(4),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 0),
+            child: Column(
+              children: [
+                ClipOval(
+                  child: Image.asset(
+                    'assets/incono.png',
+                    fit: BoxFit.cover,
+                    width: 70, // Ajusta el ancho según tus necesidades
+                    height: 70, //
+                  ),
+                ),
+                const SizedBox(
+                    height: 20), // Espacio entre la imagen y el texto
+                Text('Cumpleaños'),
+              ],
+            ),
           ),
         ),
-        ),       
+        SizedBox(
+          width: 20,
+        ),
+        InkWell(
+          onTap: () => onEspecialidadSelected(5),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 0),
+            child: Column(
+              children: [
+                ClipOval(
+                  child: Image.asset(
+                    'assets/incono.png',
+                    fit: BoxFit.cover,
+                    width: 70, // Ajusta el ancho según tus necesidades
+                    height: 70, //
+                  ),
+                ),
+                const SizedBox(
+                    height: 20), // Espacio entre la imagen y el texto
+                Text('Otros'),
+              ],
+            ),
+          ),
+        ),
       ]),
     );
   }
 }
-

@@ -52,16 +52,11 @@ class HreservaPage extends StatefulWidget {
 }
 
 class _CompanyState extends State<HreservaPage> {
-  int _backPressedCount = 0; // Contador para el número de intentos de retroceso
-  final Apiempresaclass apiempresaclass =Apiempresaclass(); // Instancia de Apiclass
-  final Apiclassdesucuentos apides = Apiclassdesucuentos();
+
   final ScrollController _scrollController = ScrollController();
-  final Apiimagenes_Empresasclass apiimagen = Apiimagenes_Empresasclass();
   final ValueNotifier<int> _currentIndexNotifier = ValueNotifier<int>(0);
-  final Apimenuclass apimenu = Apimenuclass();
   final Apimireserva apimireserva = Apimireserva();
- final Apiclass api = Apiclass();
- final Apimenuinfoclass  apimenuinfo = Apimenuinfoclass();
+
   bool isLoading = false;
   bool hasMore = true;
   int pageNumber = 1;
@@ -128,10 +123,6 @@ class _CompanyState extends State<HreservaPage> {
                 child: Text('Error: \${snapshot.error}'),
               );
             }
-            if (apiempresaclass.empresas.isEmpty) {
-              
-            }
-
             return Scaffold(
                drawer: const CustomDrawer(),
                 appBar: AppBar(

@@ -108,7 +108,7 @@ class _ReservaState extends State<Reserva> {
           child: TableCalendar(
             calendarFormat: _calendarFormat,
             focusedDay: _focusedDay,
-            firstDay: DateTime.utc(2010, 1, 1),
+            firstDay: DateTime.now(), 
             lastDay: DateTime.utc(2030, 12, 30),
             selectedDayPredicate: (day) {
               return apidate.date

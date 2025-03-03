@@ -1,3 +1,4 @@
+import 'package:cateringmid/cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http; // Importar el paquete http
 import 'dart:convert'; // Para trabajar con JSON
@@ -49,9 +50,13 @@ class Apiclienteclass {
   int pageNumber = 1;
   bool isLoading = false;
   bool hasMore = true;
+  final PreferencesService _preferencesService = PreferencesService(); // Instancia del servicio
+   Future<void> _saveuser(String nombre,String imagen) async {
+    await _preferencesService.saveusuario(nombre,imagen);
+  }
 
   Future<void> fetchclienteData() async {
-    print("llamado");
+  print("llamado");
   if (isLoading || !hasMore) return;
   final prefs = await SharedPreferences.getInstance();
   final id_cliente = prefs.getString('id');
@@ -80,9 +85,8 @@ class Apiclienteclass {
     print('Response status code: ${response.statusCode}');
     if (response.statusCode == 200) {
 
-     final jsonResponse = json.decode(response.body);
-      cliente.clear();
-      cliente.add(Cliente.fromJson(jsonResponse));
+     final data = json.decode(response.body);
+       await _saveuser(data['nombre'], data['link_imagen']);
 
     } else if (response.statusCode == 401) {
       print('Token expirado, intentando renovar...');

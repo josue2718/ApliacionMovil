@@ -8,6 +8,7 @@ import 'package:cateringmid/Empresa/api_menus.dart';
 import 'package:cateringmid/Empresa/api_service.dart';
 
 import 'package:cateringmid/Empresa/menu.dart';
+import 'package:cateringmid/Favoritos/api_favoritos.dart';
 import 'package:cateringmid/Reservas/reservamenu.dart';
 import 'package:cateringmid/Reservas/reservamodelo.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +70,7 @@ class _CompanyState extends State<CompanyPage> {
   DateTime? _selectedDay;
   MenusR reserva = MenusR();
   final ReservaMenu reservamenu = ReservaMenu();
+
 
   @override
   void initState() {
@@ -194,7 +196,6 @@ class _CompanyState extends State<CompanyPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         _buildCarouselempresa(),
-                        _favorite(),
                         _buildeempresa(),
                       ],
                     ),
@@ -250,6 +251,12 @@ class _CompanyState extends State<CompanyPage> {
                 child: Column(
                   // Usamos un Column para mostrar las tarjetas verticalmente
                   children: [
+                    favorito(
+                      link_logo: empresa.linkLogo,
+                      nombre: empresa.nombre, 
+                      id_empresa: widget.id_empresa,
+                      
+                    ),
                     nombreempresa(
                       nombre: empresa.nombre,
                       min: empresa.minPersonas,
@@ -408,9 +415,25 @@ class _CompanyState extends State<CompanyPage> {
     );
   }
 
-  Widget _favorite() {
+
+}
+
+ class favorito extends StatelessWidget {
+    favorito({
+    required this.link_logo,
+    required this.nombre,
+    required this.id_empresa
+  });
+  final String link_logo;
+  final String nombre;
+  final String id_empresa;
+
+
+ final Favoritos favoritos = Favoritos();
+  @override
+  Widget build(BuildContext context) {
     return Transform.translate(
-        offset: Offset(150, -70),
+        offset: Offset(150, -20),
         child: Container(
             decoration: BoxDecoration(
                 color: Color.fromARGB(218, 255, 255, 255),
@@ -419,7 +442,7 @@ class _CompanyState extends State<CompanyPage> {
             height: 55,
             child: IconButton(
               onPressed: () {
-
+                favoritos. gardarfavorito(context: context, empresa: id_empresa, nombre: nombre);
               },
               icon: const Icon(
                   Icons.favorite_outline_rounded), // Usa un icono de calendario
@@ -428,7 +451,6 @@ class _CompanyState extends State<CompanyPage> {
             )));
   }
 }
-
 class datosubicacion extends StatelessWidget {
   datosubicacion({
     required this.latitud,
@@ -543,7 +565,9 @@ class propetario extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 20),
-              Expanded(
+              Container(
+                  width: 200,
+                child: Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -564,6 +588,7 @@ class propetario extends StatelessWidget {
                     ),
                     const SizedBox(height: 1),
                   ],
+                ),
                 ),
               ),
               const Spacer(),
