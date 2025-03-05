@@ -43,11 +43,12 @@ class _MyHomePageScreenState extends State<MyHomePage> {
   bool hasMore = true;
   int pageNumber = 1;
   bool inicio = true;
-
+ final Apiclienteclass apicliente = Apiclienteclass();
   @override
   void initState() {
     super.initState();
     api.fetchEmpresaData(pageNumber);
+    apicliente.fetchclienteData();  
   }
 
   void checkAndReload() async {

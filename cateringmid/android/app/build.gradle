@@ -28,7 +28,6 @@ android {
         targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        targetSdkVersion 33
     }
 
     buildTypes {
@@ -43,5 +42,3 @@ android {
 flutter {
     source = "../.."
 }
-
-
