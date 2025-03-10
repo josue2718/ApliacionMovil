@@ -2,6 +2,7 @@
 import 'package:cateringmid/Hreservas/consts.dart';
 import 'package:cateringmid/Hreservas/pagoreserva.dart';
 import 'package:cateringmid/Reservas/reservamodelo.dart';
+import 'package:cateringmid/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login/login.dart'; 
@@ -163,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage1> {
                      Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MercadoPagoScreen(),
+                  builder: (context) => MyHomePage(),
                 ));
                   },
                  style: TextButton.styleFrom(

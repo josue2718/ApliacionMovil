@@ -3,43 +3,43 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class MercadoPagoScreen extends StatefulWidget {
-  @override
-  _MercadoPagoScreenState createState() => _MercadoPagoScreenState();
-}
 
-class _MercadoPagoScreenState extends State<MercadoPagoScreen> {
+
+class Apipago {
   String preferenceId = "";
 
-  Future<void> crearPreferencia() async {
-    var url = Uri.parse("https://cateringmidd.azurewebsites.net/api/pagos/crear-preferencia");
-    var response = await http.post(url);
+  Future<void> crearPreferencia({required String id_empresa,required String id_cliente,required String id_reserva ,required String empresa ,required double precio }) async {
+    final urlCliente =
+        Uri.parse('https://cateringmidd.azurewebsites.net/api/pagos/crear-preferencia');
+    final responseCliente = await http.post(
+      urlCliente,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+       
+        "id_cliente": id_cliente,
+        "id_empresa":id_empresa,
+        "id_reserva": id_reserva,
+        "producto": "pago de servicio a ${empresa}",
+        "precio": 50,
+        "cantidad": 1
+      
+      }),
+    ); print(responseCliente.body);
+    if (responseCliente.statusCode == 200) {
+      final data = json.decode(responseCliente.body);
+     
+        preferenceId =  data["value"]["redirect_url"];
+        
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      setState(() {
-        preferenceId = data["id"];
-      });
-
-     String urlPago = "$preferenceId";
-print(urlPago);
-        await launch(urlPago, forceSafariVC: false, forceWebView: false);
-
-
-
+      String urlPago = "$preferenceId";
+      print(urlPago);
+      await launch(urlPago, forceSafariVC: false, forceWebView: false);
+    } else {
+      
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Pago con Mercado Pago")),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: crearPreferencia,
-          child: Text("Pagar con Mercado Pago"),
-        ),
-      ),
-    );
-  }
+ 
 }

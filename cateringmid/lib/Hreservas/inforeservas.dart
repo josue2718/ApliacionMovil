@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:cateringmid/Hreservas/apimireserva.dart';
 import 'package:cateringmid/Hreservas/pagoreserva.dart';
-
 import 'package:cateringmid/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +45,7 @@ class _infohreserva extends State<infohreserva> {
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<int> _currentIndexNotifier = ValueNotifier<int>(0);
   final Apimireserva apimireserva = Apimireserva();
+
   bool isLoading = false;
   bool hasMore = true;
   int pageNumber = 1;
@@ -240,6 +239,7 @@ class _infohreserva extends State<infohreserva> {
       itemBuilder: (context, index) {
         if (index < apimireserva.inforeserva.length) {
           final estatus = apimireserva.infoestatus[index];
+          final info = apimireserva.inforeserva[index];
           return Column(
             children: [
               Buttonclass(
@@ -249,7 +249,14 @@ class _infohreserva extends State<infohreserva> {
                   preparando: estatus.preparando,
                   enviando: estatus.enviando,
                   completado: estatus.completado,
-                  cancelado: estatus.cancelado)
+                  cancelado: estatus.cancelado,
+                  id_cliente: info.idCliente ,
+                  id_empresa: info.idEmpresa,
+                  id_reserva: info.idReserva,
+                  nombre: info.empresaNombre,
+                  precio: info.anticipo,
+                  
+                  )
             ],
           );
         } else {
@@ -1198,6 +1205,12 @@ class Buttonclass extends StatelessWidget {
   final bool enviando;
   final bool completado;
   final bool cancelado;
+  final String id_empresa;
+  final String id_cliente;
+  final String id_reserva;
+  final String nombre;
+  final double precio;
+
 
   const Buttonclass({
     required this.enviado,
@@ -1207,10 +1220,17 @@ class Buttonclass extends StatelessWidget {
     required this.enviando,
     required this.completado,
     required this.cancelado,
+    required this.id_empresa,
+    required this.id_cliente,
+    required this.id_reserva,
+    required this.nombre,
+    required this.precio,
   });
+
 
   @override
   Widget build(BuildContext context) {
+       final Apipago pagar = Apipago ();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
       child: Column(
@@ -1235,12 +1255,8 @@ class Buttonclass extends StatelessWidget {
           if (!cancelado && !pago && !completado  && aceptado )
             ElevatedButton(
               onPressed: () {
-                  Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MercadoPagoScreen(),
-                ),
-              );
+                  pagar.crearPreferencia(id_empresa: id_empresa, id_cliente: id_cliente, id_reserva: id_reserva, empresa: nombre, precio: precio);
+              
 
               },
               style: ElevatedButton.styleFrom(
