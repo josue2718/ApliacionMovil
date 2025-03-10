@@ -1238,7 +1238,7 @@ class Buttonclass extends StatelessWidget {
                   Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PaymentPage(),
+                  builder: (context) => MercadoPagoScreen(),
                 ),
               );
 

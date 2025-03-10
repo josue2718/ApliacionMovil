@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cateringmid/Reservas/adicionales.dart';
 import 'package:cateringmid/Reservas/reservacliente.dart';
 import 'package:cateringmid/Reservas/reservamodelo.dart';
 import 'package:cateringmid/Reservas/reservaubicacion.dart';
@@ -54,59 +55,29 @@ class _selectmenu extends State<MenuSelectPage> {
   final ValueNotifier<int> _currentIndexNotifier = ValueNotifier<int>(0);
   final ReservaMenu reservamenu = ReservaMenu(); // Acceso a los menús seleccionados
  final MenusR menusr = MenusR(); // Donde se guardarán definitivamente
+  double costo=0.0;
+  double anticipo=0.0;
+
 
   bool isLoading = false;
   bool hasMore = true;
   int pageNumber = 1;
-  bool _mobiliario = true;
-  bool _blancos = true;
-  bool _personal= true;
-  bool _chef = true;
-  bool _meseros = true;
-  bool _cristaleria= true;
 final Map<int, int> cantidades = {};
   @override
   void initState() {
     super.initState();
+    actualizarCostos();
   }
 void _siguiente() async {
-  if(reservamenu.menu.isNotEmpty)
-  {
+
   reservamenu.menu.forEach((menu) {
     menusr.add(
       idMenuEmpresa: menu.idMenuEmpresa,
-      cantidad: cantidades[menu.idMenuEmpresa] ?? menu.minPersonas,
+      cantidad: cantidades[menu.cantidad] ?? menu.cantidad,
       costo: menu.precio,
       context: context,
     );
   });
-
-  print(widget.id_empresa);
-  Provider.of<ReservasProvider>(context, listen: false).actualizaradicionales(
-    _mobiliario,
-    _blancos,
-    _personal,
-    _cristaleria,
-    _meseros,
-    _chef,
-  );
-
-  print(widget.id_empresa);
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => Reserva(id_empresa: widget.id_empresa)),
-  );
-  }
-  else 
-  {
-    ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No se encontró un menú'),
-          backgroundColor: Color(0xFF670A0A),
-          duration: const Duration(seconds: 1), 
-        ),
-      );
-  }
 }
 
   
@@ -152,14 +123,14 @@ void _siguiente() async {
                         _menuinfo(),
                         _menus(),
                         const SizedBox(height: 20),
-                        _servicios(),
+                        _precios(),
                         const SizedBox(height: 30),
-                        _button(),
-                        const SizedBox(height: 30),
+
                       ],
                     ),
                   ),
                 ),
+                bottomNavigationBar: _bottomBar(context),
               );
           },
         ),
@@ -188,6 +159,110 @@ Widget _button()
     ),
   );
 }
+
+
+  Widget _bottomBar(BuildContext context) {
+    final ReservaMenu reservamenu =
+        ReservaMenu(); // Acceso a los menús seleccionados
+    final MenusR menusr = MenusR(); // Donde se guardarán definitivamente
+    if (reservamenu.menu.isEmpty) {
+      return SizedBox.shrink(); // No muestra nada si no hay menús seleccionados
+    }
+    return Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey.shade300,
+              width:
+                  2.0, // Reduje el grosor del borde para que la sombra sea más notoria
+            ),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromRGBO(158, 158, 158, 1)
+                  .withOpacity(0.5), // Color de la sombra con opacidad
+              spreadRadius: 5, // Radio de expansión de la sombra
+              blurRadius: 5, // Radio de desenfoque de la sombra
+              offset: Offset(
+                  0, 3), // Desplazamiento de la sombra (horizontal, vertical)
+            ),
+          ],
+        ),
+        child: BottomAppBar(
+          color: Color.fromARGB(255, 255, 255, 255),
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Row(
+              children: [
+                Container(
+                    width: 150,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Text(
+                              'Anticipa por :  \$${anticipo}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontSize: 18,
+                                    color: Color.fromARGB(246, 0, 0, 0),
+                                  )),
+                        )
+                      ],
+                    )),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                      Provider.of<ReservasProvider>(context, listen: false).actualizarcostos(
+                        costo,
+                        anticipo
+                      );
+
+                      _siguiente();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AdicionalesPage(id_empresa: widget.id_empresa),
+                        ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(150, 45),
+                    backgroundColor: const Color.fromRGBO(103, 10, 10, 1),
+                    foregroundColor: const Color.fromARGB(255, 240, 239, 239),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text('Continuar'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+void precio() {
+  double totalCosto = 0.0;
+  double totalAnticipo = 0.0;
+
+  for (var menu in reservamenu.menu) {
+    int cantidad = cantidades[menu.idMenuEmpresa] ?? menu.cantidad;
+    totalCosto += cantidad * menu.precio;
+  }
+
+  totalCosto *= 1.15; // Aplicar 15% adicional
+  totalAnticipo = totalCosto * 0.33; // 33% de anticipo
+
+  setState(() {
+    costo = totalCosto.roundToDouble();
+    anticipo = totalAnticipo.roundToDouble();
+  });
+}
+
 
 Widget _menus()
 {
@@ -279,10 +354,11 @@ Widget _menus()
                       Row(
                       children: [
                         IconButton(
-                          onPressed: () {
+                           onPressed: () {
                             setState(() {
-                              if (menu.minPersonas > 1) {
-                                menu.minPersonas--;
+                              if (menu.minPersonas < menu.cantidad) {
+                                menu.cantidad--;
+                                precio();
                               }
                             });
                           },
@@ -293,16 +369,19 @@ Widget _menus()
                           ),
                         ),
                         Text(
-                          '${menu.minPersonas}',
+                          '${menu.cantidad}',
                           style: const TextStyle(
                             fontSize: 20,
                             color: Color.fromARGB(197, 112, 103, 103),
                           ),
                         ),
                         IconButton(
-                          onPressed: () {
+                            onPressed: () {
                             setState(() {
-                              menu.minPersonas++;
+                               if (menu.maxPersonas>  menu.cantidad) {
+                              menu.cantidad++;
+                              precio();
+                               }
                             });
                           },
                           icon: const Icon(
@@ -462,7 +541,24 @@ Widget _bar(){
   );
 }
 
-Widget _servicios()
+void actualizarCostos() {
+    
+  double Costo = 0.0;
+  double totalcosto = 0.0;
+  double totalanticipo= 00;
+
+  for (var menu in  reservamenu.menu) {
+    Costo += menu.cantidad * menu.precio;
+  }
+  totalcosto = Costo*1.15;
+  print(totalcosto);
+  totalanticipo = totalcosto*.33;
+  costo= totalcosto.roundToDouble();
+  anticipo=totalanticipo.roundToDouble();
+
+}
+
+Widget _precios()
   {
     return Column(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -473,86 +569,51 @@ Widget _servicios()
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical:0 ),
-                child:
-                Text(
-                  'Servicios adicionales', // Usamos la variable que corresponde a la empresa
+                child: Column(
+                   mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                  Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                  'Costos', // Usamos la variable que corresponde a la empresa
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF670A0A),
                   ),
                 ), 
+                ),
+                 Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                  'Costo total:  \$${costo}', // Usamos la variable que corresponde a la empresa
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                  )
+                ),
+                SizedBox(height: 10), 
+                 Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                  'Costos anticipo:  \$${anticipo}', // Usamos la variable que corresponde a la empresa
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ), 
+                 )
+                  ]
+                ),
+                
               ),
+              
           ]),
         ), 
       const SizedBox(height: 20),
-      CheckboxListTile(
-        title: Text('Mobiliario'),
-        value: _mobiliario,
-        onChanged: (bool? value) {
-          setState(() {
-            _mobiliario = value!;
-          });
-        },
-        activeColor: Color(0xFF670A0A),
-        controlAffinity: ListTileControlAffinity.leading,
-      ),
-      CheckboxListTile(
-        title: Text('Blancos'),
-        value: _blancos,
-        onChanged: (bool? value) {
-          setState(() {
-            _blancos = value!;
-          });
-        },
-        activeColor: Color(0xFF670A0A),
-        controlAffinity: ListTileControlAffinity.leading,
-      ),
-      CheckboxListTile(
-        title: Text('Personal'),
-        value: _personal,
-        onChanged: (bool? value) {
-          setState(() {
-            _personal = value!;
-          });
-        },
-        activeColor: Color(0xFF670A0A),
-        controlAffinity: ListTileControlAffinity.leading,
-      ),
-      CheckboxListTile(
-        title: Text('Cristaleria'),
-        value: _cristaleria,
-        onChanged: (bool? value) {
-          setState(() {
-            _cristaleria = value!;
-          });
-        },
-        activeColor: Color(0xFF670A0A),
-        controlAffinity: ListTileControlAffinity.leading,
-      ),
-      CheckboxListTile(
-        title: Text('Meseros'),
-        value: _meseros,
-        onChanged: (bool? value) {
-          setState(() {
-            _meseros = value!;
-          });
-        },
-        activeColor: Color(0xFF670A0A),
-        controlAffinity: ListTileControlAffinity.leading,
-
-      ),
-      CheckboxListTile(
-        title: Text('Chef'),
-        value: _chef,
-        onChanged: (bool? value) {
-          setState(() {
-            _chef = value!;
-          });
-        },
-        activeColor: Color(0xFF670A0A),
-        controlAffinity: ListTileControlAffinity.leading,
-      ),
     ]
     );
   }
@@ -568,7 +629,7 @@ Widget _paso()
             child: Column(
               children: [
                 Text(
-                  'Paso 1 de 4', // Usamos la variable que corresponde a la empresa
+                  'Paso 1 de 5', // Usamos la variable que corresponde a la empresa
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,

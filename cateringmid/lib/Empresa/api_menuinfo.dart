@@ -45,12 +45,6 @@ class Menusinfo {
   String descripcion;
   String linkImagen;
   double precio;
-  bool mobiliario;
-  bool blancos;
-  bool personal;
-  bool cristaleria;
-  bool chef;
-  bool meseros;
   int minPersonas;
   int maxPersonas;
 
@@ -61,12 +55,6 @@ class Menusinfo {
     required this.descripcion,
     required this.linkImagen,
     required this.precio,
-    required this.mobiliario,
-    required this.blancos,
-    required this.personal,
-    required this.cristaleria,
-    required this.chef,
-    required this.meseros,
     required this.minPersonas,
     required this.maxPersonas,
   });
@@ -80,12 +68,6 @@ class Menusinfo {
       descripcion: json['descripcion'],
       linkImagen: json['link_imagen'],
       precio: json['precio'].toDouble(),
-      mobiliario: json['mobiliario'],
-      blancos: json['blancos'],
-      personal: json['personal'],
-      cristaleria: json['cristaleria'],
-      chef: json['chef'],
-      meseros: json['meseros'],
       minPersonas: json['min_personas'],
       maxPersonas: json['max_personas'],
     );
@@ -100,12 +82,6 @@ class Menusinfo {
       'descripcion': descripcion,
       'link_imagen': linkImagen,
       'precio': precio,
-      'mobiliario': mobiliario,
-      'blancos': blancos,
-      'personal': personal,
-      'cristaleria': cristaleria,
-      'chef': chef,
-      'meseros': meseros,
       'min_personas': minPersonas,
       'max_personas': maxPersonas,
     };

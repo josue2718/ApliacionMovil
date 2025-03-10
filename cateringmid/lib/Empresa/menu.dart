@@ -10,13 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
-
+import 'package:shimmer/shimmer.dart';
 import '../Reservas/reservamenu.dart';
 import '../Reservas/selectmenu.dart';
 import '../home/api_service.dart';
 import '../home/home.dart';
 
-void main() => runApp(MyApp());
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -125,12 +125,7 @@ class _CompanyState extends State<MenuPage> {
           ]),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xFF670A0A),
-                  backgroundColor: Colors.white,
-                ),
-              );
+              return _buildLoadingShimmer(); 
             }
             if (snapshot.hasError) {
               return Center(
@@ -158,10 +153,83 @@ class _CompanyState extends State<MenuPage> {
                   ),
                 ),
               ),
-              floatingActionButton: _buildFloatingActionButton(),
+                bottomNavigationBar: _bottomBar(context),
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingShimmer() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              height: 350,
+              width: double.infinity,
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          ListView.builder(
+            itemCount: 5, // Número de elementos de esqueleto
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 110,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 20,
+                              width: 200,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 16,
+                              width: 150,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 16,
+                              width: 100,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -241,33 +309,88 @@ class _CompanyState extends State<MenuPage> {
     );
   }
 
-  Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () {
-    final listaEmpresas = apiempresaclass.empresas; // Asumiendo que apiempresaclass.empresas es List<Empresa> 
-      if (listaEmpresas.isNotEmpty) { // Verifica que la lista no esté vacía
-        final idEmpresa = listaEmpresas[0].idEmpresa; // Obtiene el idEmpresa del primer elemento (índice 0)
+  
 
-          Navigator.push(
-          context,
-          MaterialPageRoute(
-          builder: (context) => MenuSelectPage(id_empresa: idEmpresa),
+Widget _bottomBar(BuildContext context) {
+    final ReservaMenu reservamenu =
+        ReservaMenu(); // Acceso a los menús seleccionados
+    final MenusR menusr = MenusR(); // Donde se guardarán definitivamente
+    if (reservamenu.menu.isEmpty) {
+      return SizedBox.shrink(); // No muestra nada si no hay menús seleccionados
+    }
+    return Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey.shade300,
+              width:
+                  2.0, // Reduje el grosor del borde para que la sombra sea más notoria
+            ),
           ),
-          );
-        }
-       else {
-
-      }
-        },
-    
-    backgroundColor:Color(0xFF670A0A) ,
-    child: Icon(
-      Icons.add_circle_outline_sharp ,
-      color: Color.fromARGB(255, 255, 255, 255),
-    ),
-    );
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromRGBO(158, 158, 158, 1)
+                  .withOpacity(0.5), // Color de la sombra con opacidad
+              spreadRadius: 5, // Radio de expansión de la sombra
+              blurRadius: 5, // Radio de desenfoque de la sombra
+              offset: Offset(
+                  0, 3), // Desplazamiento de la sombra (horizontal, vertical)
+            ),
+          ],
+        ),
+        child: BottomAppBar(
+          color: Color.fromARGB(255, 255, 255, 255),
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Row(
+              children: [
+                Container(
+                    width: 150,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Text(
+                              'Menus seleccionados: ${reservamenu.menu.length} ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontSize: 18,
+                                    color: Color.fromARGB(246, 0, 0, 0),
+                                  )),
+                        )
+                      ],
+                    )),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MenuSelectPage(id_empresa: widget.id_empresa),
+                        ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(150, 45),
+                    backgroundColor: const Color.fromRGBO(103, 10, 10, 1),
+                    foregroundColor: const Color.fromARGB(255, 240, 239, 239),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text('Reserva'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
+
 
 class cardsofertas extends StatelessWidget {
   cardsofertas({required this.link_imagen});
@@ -344,12 +467,29 @@ class CustomerCart extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 1, horizontal: 0),
            child: InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MenuinfoPage(id_empresa: idEmpresa,id_menu_empresa: idMenuEmpresa),
-                ),
-              );
+              
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  transitionDuration: Duration(milliseconds: 500), // Duración de la animación
+                                  pageBuilder: (context, animation, secondaryAnimation) => 
+                                    MenuinfoPage(id_empresa: idEmpresa, id_menu_empresa: idMenuEmpresa),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    const begin = Offset(0.0, 1.0); // Desde abajo
+                                    const end = Offset.zero; // A su posición normal
+                                    const curve = Curves.easeInOut; // Animación suave
+
+                                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                    var offsetAnimation = animation.drive(tween);
+
+                                    return SlideTransition(
+                                      position: offsetAnimation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+                            
             },
             child: Padding(
               padding: const EdgeInsets.all(10),
@@ -406,9 +546,29 @@ class CustomerCart extends StatelessWidget {
 
                             IconButton(
                             onPressed: () {
-                              reservamenu.add(context: context,idEmpresa: idEmpresa, idMenuEmpresa: idMenuEmpresa,linkImagen: link_imagen, nombre: nombre, minPersonas: min,maxPersonas: max,precio: precio);
-                              
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  transitionDuration: Duration(milliseconds: 500), // Duración de la animación
+                                  pageBuilder: (context, animation, secondaryAnimation) => 
+                                    MenuinfoPage(id_empresa: idEmpresa, id_menu_empresa: idMenuEmpresa),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    const begin = Offset(0.0, 1.0); // Desde abajo
+                                    const end = Offset.zero; // A su posición normal
+                                    const curve = Curves.easeInOut; // Animación suave
+
+                                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                    var offsetAnimation = animation.drive(tween);
+
+                                    return SlideTransition(
+                                      position: offsetAnimation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
                             },
+
                             icon: const Icon(Icons.add_outlined ), // Usa un icono de calendario
                             color: const Color(0xFF670A0A),
                             iconSize: 35, // Usa iconSize en lugar de size
@@ -462,5 +622,6 @@ class CustomerCart extends StatelessWidget {
     );
   }
 }
+
 
 

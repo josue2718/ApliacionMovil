@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:cateringmid/Empresa/menu.dart';
+import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cateringmid/Empresa/api_gastronomia.dart';
@@ -18,24 +20,6 @@ import '../Reservas/selectmenu.dart';
 import '../home/api_service.dart';
 import '../home/home.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fetch Data with Infinite Scroll',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 255, 255, 255)),
-      ),
-      home: MenuinfoPage(
-        id_empresa: '1', id_menu_empresa: '',
-      ),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
 
 class MenuinfoPage extends StatefulWidget {
   final String id_empresa;
@@ -62,10 +46,12 @@ class _CompanyState extends State<MenuinfoPage> {
   final Apimenuclass apimenu = Apimenuclass();
  final Apiclass api = Apiclass();
  final Apimenuinfoclass  apimenuinfo = Apimenuinfoclass();
-  bool isLoading = false;
+ final ReservaMenu reservamenu = ReservaMenu(); // Acceso a los menús seleccionados
+ final MenusR menusr = MenusR(); // Donde se guardarán definitivamente
+    bool isLoading = false;
   bool hasMore = true;
   int pageNumber = 1;
-  
+  int cantidad=0;
   bool personalizar = false;
 
   @override
@@ -102,21 +88,8 @@ class _CompanyState extends State<MenuinfoPage> {
     });
   }
 
-  // Función para cargar más datos de forma asíncrona
-  void fetchMoreData() async {
-    if (isLoading) return; // Si ya estamos cargando, no hacer nada más
 
-    setState(() {
-      isLoading = true;
-    });
-
-    try {} catch (e) {
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -131,13 +104,9 @@ class _CompanyState extends State<MenuinfoPage> {
             apimenuinfo.fetchMenuinfoData(widget.id_menu_empresa),
           ]),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xFF670A0A),
-                  backgroundColor: Colors.white,
-                ),
-              );
+            if (snapshot.connectionState == ConnectionState.waiting && !isLoading) {
+              isLoading= true;
+              return _buildLoadingShimmer(); 
             }
             if (snapshot.hasError) {
               return Center(
@@ -147,7 +116,7 @@ class _CompanyState extends State<MenuinfoPage> {
             if (apiempresaclass.empresas.isEmpty) {
               
             }
-
+  
             return Scaffold(
               backgroundColor: Colors.white,
               body: RefreshIndicator(
@@ -158,7 +127,7 @@ class _CompanyState extends State<MenuinfoPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _buildCarousel(),
+                        
                         _buildMenuinfo(),
                         Transform.translate(
                         offset: Offset(0, -50), // Desplaza 50 píxeles hacia arriba (ajusta el valor)
@@ -170,7 +139,7 @@ class _CompanyState extends State<MenuinfoPage> {
                   ),
                 ),
               ),
-              floatingActionButton: _buildFloatingActionButton(),
+              bottomNavigationBar: _bottomBar(context),
             );
           },
         ),
@@ -178,35 +147,109 @@ class _CompanyState extends State<MenuinfoPage> {
     );
   }
 
-  Widget _buildCarousel() {
-    if (apiimagen.imagenes_Empresas.isEmpty) return SizedBox();
-    return CarouselSlider.builder(
-      itemCount: apiimagen.imagenes_Empresas.length,
-      itemBuilder: (context, index, realIndex) {
-        final imagen = apiimagen.imagenes_Empresas[index];
-        return cardsofertas(link_imagen: imagen.link_imagen);
-      },
-      options: CarouselOptions(
-        height: 350,
-        viewportFraction: 1.0,
-        enlargeCenterPage: true,
-        enableInfiniteScroll: true,
-        autoPlay: true,
-        autoPlayInterval: const Duration(seconds: 2),
-        autoPlayAnimationDuration: const Duration(milliseconds: 800),
-        scrollDirection: Axis.horizontal,
-        onPageChanged: (index, reason) {
-          _currentIndexNotifier.value = index;
-        },
+  Widget _buildLoadingShimmer() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              height: 350,
+              width: double.infinity,
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 20,
+                    width: double.infinity,
+                    color: Colors.white,
+                  ),
+                ),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 20,
+                    width: double.infinity,
+                    color: Colors.white,
+                  ),
+                ),
+                Transform.translate(
+                  offset: Offset(0, -40),
+                  child: ListView.builder(
+                    itemCount: 5, // Número de elementos de esqueleto para Gastronomia
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 20,
+                                      width: 200,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Container(
+                                      height: 13,
+                                      width: 150,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
+
+
   Widget _buildMenuinfo() {
    return Transform.translate(
-    offset: Offset(0, -40), // Desplaza 50 píxeles hacia arriba (ajusta el valor)
+    offset: Offset(0, -50), // Desplaza 50 píxeles hacia arriba (ajusta el valor)
     child: ListView.builder(
-      itemCount: apimenuinfo.menuinfo.length + (isLoading ? 1 : 0),
+      itemCount: apimenuinfo.menuinfo.length ,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
@@ -214,22 +257,12 @@ class _CompanyState extends State<MenuinfoPage> {
           final menuinfo = apimenuinfo.menuinfo[index];
           return Column(
             children: [
+              cardsofertas(link_imagen: menuinfo.linkImagen),
               nombremenu(
                 nombre: menuinfo.nombre, 
                 min: menuinfo.minPersonas,
                 max: menuinfo.maxPersonas, idEmpresa: menuinfo.idEmpresa, idMenuEmpresa: menuinfo.idMenuEmpresa, precio: menuinfo.precio, link_imagen: menuinfo.linkImagen,
                 ),
-              informacionmenu(
-                descripcion: menuinfo.descripcion,
-                link_imagen: menuinfo.linkImagen,
-                precio:  menuinfo.precio,
-                mobiliario: menuinfo.mobiliario,
-                blancos: menuinfo.blancos,
-                personal: menuinfo.personal,
-                cristaleria: menuinfo.cristaleria,
-                chef: menuinfo.chef,
-                meseros: menuinfo.meseros,
-              ),
             ]
           );
         } else {
@@ -294,7 +327,7 @@ Widget _platillo()
   offset: Offset(0, -40), // Desplaza 50 píxeles hacia arriba (ajusta el valor)
   child: 
     ListView.builder(
-    itemCount: apimenuinfo.gastronomia.length +(isLoading ? 1 : 0),
+    itemCount: apimenuinfo.gastronomia.length ,
     shrinkWrap: true,
     physics: const NeverScrollableScrollPhysics(),
     itemBuilder: (context, index) {
@@ -320,7 +353,143 @@ Widget _platillo()
 
 }
 
+Widget _bottomBar(BuildContext context) {
+    final ReservaMenu reservamenu =
+        ReservaMenu(); // Acceso a los menús seleccionados
+    
+   return  ListView.builder(
+      itemCount: apimenuinfo.menuinfo.length ,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        if (index < apimenuinfo.menuinfo.length) {
+     
+final menu = apimenuinfo.menuinfo[index];
+if(cantidad == 0){
+ cantidad = menu.minPersonas;
 }
+    return Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey.shade300,
+              width:
+                  2.0, // Reduje el grosor del borde para que la sombra sea más notoria
+            ),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromRGBO(158, 158, 158, 1)
+                  .withOpacity(0.5), // Color de la sombra con opacidad
+              spreadRadius: 5, // Radio de expansión de la sombra
+              blurRadius: 5, // Radio de desenfoque de la sombra
+              offset: Offset(
+                  0, 3), // Desplazamiento de la sombra (horizontal, vertical)
+            ),
+          ],
+        ),
+        child: BottomAppBar(
+          color: Color.fromARGB(255, 255, 255, 255),
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Row(
+               
+              children: [
+                Container(
+                  
+                    width: 150,
+                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    border: Border.all( // Use Border.all for a uniform border
+                      color: Color.fromARGB(255, 196, 196, 196),
+                      width: 3.0, // Optional: Set the border width
+                    ),
+                  ),
+               
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center, // Centra verticalmente el Column
+    crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child:Row(
+  mainAxisAlignment: MainAxisAlignment.center, // Centra verticalmente el Column
+    crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (menu.minPersonas < cantidad) {
+                                cantidad--;
+                              }
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.remove,
+                            color: Color.fromARGB(197, 112, 103, 103),
+                            size: 25,
+                          ),
+                        ),
+                        Text(
+                          '${cantidad}',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(197, 112, 103, 103),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                               if (menu.maxPersonas>  cantidad) {
+                              cantidad++;
+                               }
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.add,
+                            color: Color.fromARGB(197, 112, 103, 103),
+                            size: 25,
+                          ),
+                        ),
+                      ],
+                    ),
+                        )
+                      ],
+                    )),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                     
+                    setState(() {
+                    reservamenu.add(context: context, idMenuEmpresa: menu.idMenuEmpresa, idEmpresa: menu.idEmpresa, nombre: menu.nombre, linkImagen: menu.linkImagen, precio: menu.precio, minPersonas: menu.minPersonas, maxPersonas: menu.maxPersonas, cantidad:cantidad);
+                  });
+
+          
+
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(150, 45),
+                    backgroundColor: const Color.fromRGBO(103, 10, 10, 1),
+                    foregroundColor: const Color.fromARGB(255, 240, 239, 239),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text('Añadir'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+});
+}
+}
+
+
+
 
 
 class cardsofertas extends StatelessWidget {
@@ -335,6 +504,8 @@ class cardsofertas extends StatelessWidget {
         bottomRight: Radius.circular(30.0),
       ),
       child: Container(
+        height: 360,
+        width: 450,
         decoration: BoxDecoration(
           color: Colors.grey[300],
           borderRadius: BorderRadius.only(
@@ -464,204 +635,6 @@ class CustomerCart extends StatelessWidget {
 }
 
 
-
-class informacionmenu extends StatelessWidget {
-  informacionmenu(
-      {required this.descripcion,
-      required this.link_imagen,
-      required this.precio,
-      required this.mobiliario,
-      required this.blancos ,
-      required this.personal ,
-      required this.cristaleria,
-      required this.meseros ,
-      required this.chef,
-});
-  
-  final String link_imagen;
-  final String descripcion;
-  final double precio;
-  final bool mobiliario;
-  final bool blancos;
-  final bool personal;
-  final bool cristaleria;
-  final bool meseros;
-  final bool chef;
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 0),
-                Text(
-                  'Descripcion', // Usamos la variable que corresponde a la empresa
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF670A0A),
-                      ),
-                ),
-                 Text(
-                  descripcion, // Usamos la variable que corresponde a la empresa
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
-                ),
-                const SizedBox(height: 15),
-                Text(
-                  '¿Que servicios ofrecemos?', // Usamos la variable que corresponde a la empresa
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF670A0A),
-                      ),
-                ),
-                const SizedBox(height: 5),
-                 if(mobiliario== true)...[
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    children: [
-                    Icon(
-                      Icons.table_bar,
-                      color: Color.fromARGB(246, 134, 129, 120),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Mobiliario',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ]),
-                ),
-                ],
-                if(blancos== true)...[
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    children: [
-                    Icon(
-                      Icons.table_bar,
-                      color: Color.fromARGB(246, 134, 129, 120),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Blancos',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ]),
-                ),
-                ],
-                if(personal== true)...[
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    children: [
-                    Icon(
-                      Icons.person,
-                      color: Color.fromARGB(246, 134, 129, 120),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Personal',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ]),
-                ),
-                ],
-                if(cristaleria== true)...[
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    children: [
-                    Icon(
-                      Icons.wine_bar,
-                      color: Color.fromARGB(246, 134, 129, 120),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Cristaleria',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ]),
-                ),
-                ],
-                if(meseros== true)...[
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    children: [
-                    Icon(
-                      Icons.person,
-                      color: Color.fromARGB(246, 134, 129, 120),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Meseros',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ]),
-                ),
-                ],
-                if(chef== true)...[
-                Container(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    children: [
-                    Icon(
-                      Icons.person,
-                      color: Color.fromARGB(246, 134, 129, 120),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Chef',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ]),
-                ),
-                ],
-                const SizedBox(height: 1),
-              ]),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class nombremenu extends StatelessWidget {
   nombremenu({
     required this.nombre,
@@ -690,7 +663,7 @@ class nombremenu extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start, // Align to the top of the row
         children: [
           Container(
-            width: 320,
+            
             child: 
           Expanded( // Use Expanded to allow text to wrap
             child: Column(
@@ -704,8 +677,7 @@ class nombremenu extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                   softWrap: true, // Key for text wrapping
-                  maxLines: 1, // Limita el texto a una sola línea
-                                  overflow: TextOverflow.ellipsis
+               
                 ),
                 Row(
                   children: [
@@ -728,32 +700,7 @@ class nombremenu extends StatelessWidget {
             ),
           ),
           ),
-            const Spacer(),
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFF670A0A),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            width: 55,
-            height: 55,
-            child: IconButton(
-              onPressed: () {
-                reservamenu.add(
-                  context: context,
-                  idEmpresa: idEmpresa,
-                  idMenuEmpresa: idMenuEmpresa,
-                  linkImagen: link_imagen,
-                  nombre: nombre,
-                  minPersonas: min,
-                  maxPersonas: max,
-                  precio: precio,
-                );
-              },
-              icon: const Icon(Icons.add_outlined),
-              color: const Color.fromARGB(255, 255, 255, 255),
-              iconSize: 35,
-            ),
-          ),
+           
         ],
       ),
     );

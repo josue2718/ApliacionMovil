@@ -6,8 +6,9 @@ import 'package:cateringmid/Empresa/api_imagenes.dart';
 import 'package:cateringmid/Empresa/date.dart';
 import 'package:cateringmid/Empresa/api_menus.dart';
 import 'package:cateringmid/Empresa/api_service.dart';
-
+import 'package:shimmer/shimmer.dart';
 import 'package:cateringmid/Empresa/menu.dart';
+import 'package:cateringmid/Empresa/menuinfo.dart';
 import 'package:cateringmid/Favoritos/api_favoritos.dart';
 import 'package:cateringmid/Reservas/reservamenu.dart';
 import 'package:cateringmid/Reservas/reservamodelo.dart';
@@ -20,7 +21,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../Reservas/selectmenu.dart';
 import '../home/api_service.dart';
 
-void main() => runApp(MyApp());
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -70,7 +71,6 @@ class _CompanyState extends State<CompanyPage> {
   DateTime? _selectedDay;
   MenusR reserva = MenusR();
   final ReservaMenu reservamenu = ReservaMenu();
-
 
   @override
   void initState() {
@@ -173,12 +173,7 @@ class _CompanyState extends State<CompanyPage> {
           ]),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Color(0xFF670A0A),
-                  backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                ),
-              );
+              return _buildLoadingShimmer();
             }
             if (snapshot.hasError) {
               return Center(child: Text('Error: \${snapshot.error}'));
@@ -197,12 +192,13 @@ class _CompanyState extends State<CompanyPage> {
                       children: [
                         _buildCarouselempresa(),
                         _buildeempresa(),
+                        
                       ],
                     ),
                   ),
                 ),
               ),
-              floatingActionButton: _button(),
+              bottomNavigationBar: _bottomBar(context),
             );
           },
         ),
@@ -210,16 +206,158 @@ class _CompanyState extends State<CompanyPage> {
     );
   }
 
+Widget _buildLoadingShimmer() {
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            height: 350,
+            width: double.infinity,
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+        ListView.builder(
+          itemCount: 1, // Número de elementos de esqueleto para Menuinfo
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 75,
+                      height: 75,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      width: 300,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    
+                    
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 20,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 5),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 20,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 15),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 20,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 200,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
+                SizedBox(height: 15),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 20,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
+                SizedBox(height: 15),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 20,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
+                SizedBox(height: 15),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  height: 20,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
   Widget _buildCarouselempresa() {
     if (apiimagen.imagenes_Empresas.isNotEmpty) ;
-    return CarouselSlider.builder(
+    return  ClipRRect(
+      borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(30.0),
+        bottomRight: Radius.circular(30.0),
+      ),
+      child:CarouselSlider.builder(
       itemCount: apiimagen.imagenes_Empresas.length,
       itemBuilder: (context, index, realIndex) {
         final imagen = apiimagen.imagenes_Empresas[index];
         return imagenesempresa(link_imagen: imagen.link_imagen);
       },
       options: CarouselOptions(
-        height: 350,
+
+        height: 360,
+        clipBehavior: Clip.antiAlias,
         viewportFraction: 1.0,
         enlargeCenterPage: false,
         enableInfiniteScroll: true,
@@ -231,7 +369,7 @@ class _CompanyState extends State<CompanyPage> {
           _currentIndexNotifier.value = index;
         },
       ),
-    );
+    ));
   }
 
   Widget _buildeempresa() {
@@ -253,9 +391,8 @@ class _CompanyState extends State<CompanyPage> {
                   children: [
                     favorito(
                       link_logo: empresa.linkLogo,
-                      nombre: empresa.nombre, 
+                      nombre: empresa.nombre,
                       id_empresa: widget.id_empresa,
-                      
                     ),
                     nombreempresa(
                       nombre: empresa.nombre,
@@ -264,11 +401,10 @@ class _CompanyState extends State<CompanyPage> {
                       oncalendar: _llamarCalendario,
                     ),
                     propetario(
-                      link_logo: empresa.linkLogo,
-                      nombre: empresa.nombrepropietario,
-                      apellido: empresa.apellidopropietario,
-                      estrellas: empresa.estrellas
-                    ),
+                        link_logo: empresa.linkLogo,
+                        nombre: empresa.nombrepropietario,
+                        apellido: empresa.apellidopropietario,
+                        estrellas: empresa.estrellas),
                     informacionempresa(
                       link_logo: empresa.linkLogo,
                       nombre: empresa.nombre,
@@ -285,7 +421,8 @@ class _CompanyState extends State<CompanyPage> {
                       chef: empresa.chef,
                       vyl: empresa.vyl,
                       ubicacion: empresa.direccion,
-                      horario: empresa.horario,
+                      horario:
+                          'De ${empresa.diainicio} a ${empresa.diafin} de ${empresa.horainicio} a ${empresa.horafin}',
                       premin: empresa.premin,
                     ),
                     _infoservicios(),
@@ -315,6 +452,7 @@ class _CompanyState extends State<CompanyPage> {
                               final menu = apimenu.menu[index];
                               return imagenesmenu(
                                 link_imagen: menu.linkImagen,
+                                id_empresa: menu.idEmpresa,
                               );
                             } else {
                               return const Padding(
@@ -415,21 +553,96 @@ class _CompanyState extends State<CompanyPage> {
     );
   }
 
-
+  Widget _bottomBar(BuildContext context) {
+    final ReservaMenu reservamenu =
+        ReservaMenu(); // Acceso a los menús seleccionados
+    final MenusR menusr = MenusR(); // Donde se guardarán definitivamente
+    if (reservamenu.menu.isEmpty) {
+      return SizedBox.shrink(); // No muestra nada si no hay menús seleccionados
+    }
+    return Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey.shade300,
+              width:
+                  2.0, // Reduje el grosor del borde para que la sombra sea más notoria
+            ),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromRGBO(158, 158, 158, 1)
+                  .withOpacity(0.5), // Color de la sombra con opacidad
+              spreadRadius: 5, // Radio de expansión de la sombra
+              blurRadius: 5, // Radio de desenfoque de la sombra
+              offset: Offset(
+                  0, 3), // Desplazamiento de la sombra (horizontal, vertical)
+            ),
+          ],
+        ),
+        child: BottomAppBar(
+          color: Color.fromARGB(255, 255, 255, 255),
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Row(
+              children: [
+                Container(
+                    width: 150,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Text(
+                              'Menus seleccionados: ${reservamenu.menu.length} ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontSize: 18,
+                                    color: Color.fromARGB(246, 0, 0, 0),
+                                  )),
+                        )
+                      ],
+                    )),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MenuSelectPage(id_empresa: widget.id_empresa),
+                        ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(150, 45),
+                    backgroundColor: const Color.fromRGBO(103, 10, 10, 1),
+                    foregroundColor: const Color.fromARGB(255, 240, 239, 239),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text('Reserva'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
 }
 
- class favorito extends StatelessWidget {
-    favorito({
-    required this.link_logo,
-    required this.nombre,
-    required this.id_empresa
-  });
+class favorito extends StatelessWidget {
+  favorito(
+      {required this.link_logo,
+      required this.nombre,
+      required this.id_empresa});
   final String link_logo;
   final String nombre;
   final String id_empresa;
 
-
- final Favoritos favoritos = Favoritos();
+  final Favoritos favoritos = Favoritos();
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
@@ -442,7 +655,8 @@ class _CompanyState extends State<CompanyPage> {
             height: 55,
             child: IconButton(
               onPressed: () {
-                favoritos. gardarfavorito(context: context, empresa: id_empresa, nombre: nombre);
+                favoritos.gardarfavorito(
+                    context: context, empresa: id_empresa, nombre: nombre);
               },
               icon: const Icon(
                   Icons.favorite_outline_rounded), // Usa un icono de calendario
@@ -451,6 +665,7 @@ class _CompanyState extends State<CompanyPage> {
             )));
   }
 }
+
 class datosubicacion extends StatelessWidget {
   datosubicacion({
     required this.latitud,
@@ -566,51 +781,53 @@ class propetario extends StatelessWidget {
               ),
               const SizedBox(width: 20),
               Container(
-                  width: 200,
+                width: 200,
                 child: Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${nombre} ${apellido}', // Usamos la variable que corresponde a la empresa
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF670A0A),
-                          ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'Dueño del Catering',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontSize: 13,
-                          ),
-                    ),
-                    const SizedBox(height: 1),
-                  ],
-                ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${nombre} ${apellido}', // Usamos la variable que corresponde a la empresa
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF670A0A),
+                                ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        'Dueño del Catering',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 13,
+                                ),
+                      ),
+                      const SizedBox(height: 1),
+                    ],
+                  ),
                 ),
               ),
               const Spacer(),
               Container(
-                    alignment: Alignment.topLeft,
-                    child: Row(children: [
-                      Icon(
-                        Icons.star_rounded ,
-                            color: Color(0xFF6A77E2E),
-                            size:40,
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        '${estrellas}',
-                        style: const TextStyle(
-                          fontSize: 28,
-                          color: Color.fromARGB(246, 134, 129, 120),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ]),
+                alignment: Alignment.topLeft,
+                child: Row(children: [
+                  Icon(
+                    Icons.star_rounded,
+                    color: Color(0xFF6A77E2E),
+                    size: 40,
                   ),
+                  const SizedBox(width: 10),
+                  Text(
+                    '${estrellas}',
+                    style: const TextStyle(
+                      fontSize: 28,
+                      color: Color.fromARGB(246, 134, 129, 120),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ]),
+              ),
             ],
           ),
         ]));
@@ -717,73 +934,75 @@ class informacionempresa extends StatelessWidget {
                 const SizedBox(height: 5),
                 Text(
                   informacion,
-                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontSize: 15,
                         color: Color.fromARGB(246, 134, 129, 120),
                       ),
                 ),
                 SizedBox(height: 10),
                 Container(
-                    alignment: Alignment.topLeft,
-                    child: Row(children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(child: 
-                      Text(
+                  alignment: Alignment.topLeft,
+                  child: Row(children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      color: Color.fromARGB(246, 134, 129, 120),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
                         'Zona(s) de servicio: ${zona}',
-                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
-                      ),
-                      ),
-                    ]),
-                  ),
-                  SizedBox(height: 7),
+                    ),
+                  ]),
+                ),
+                SizedBox(height: 7),
                 Container(
-                    alignment: Alignment.topLeft,
-                    child: Row(children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(child: 
-                      Text(
+                  alignment: Alignment.topLeft,
+                  child: Row(children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      color: Color.fromARGB(246, 134, 129, 120),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
                         'Ciudad principal: ${ciudad}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
-                      ),
-                      ),
-                    ]),
-                  ),
-                   const SizedBox(height: 7),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Row(children: [
-                      Icon(
-                        Icons.room_service,
-                        size: 23,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                        
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(child: 
-                      Text(
+                    ),
+                  ]),
+                ),
+                const SizedBox(height: 7),
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Row(children: [
+                    Icon(
+                      Icons.room_service,
+                      size: 23,
+                      color: Color.fromARGB(246, 134, 129, 120),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
                         'Menús desde: \$${premin}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
-                      ),
-                      ),
-                    ]),
-                  ),
+                    ),
+                  ]),
+                ),
                 const SizedBox(height: 15),
                 Text(
                   '¿Que servicios ofrecemos?', // Usamos la variable que corresponde a la empresa
@@ -805,10 +1024,11 @@ class informacionempresa extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Mobiliario',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -824,10 +1044,11 @@ class informacionempresa extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Blancos',
-                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -843,10 +1064,11 @@ class informacionempresa extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Personal',
-                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -862,10 +1084,11 @@ class informacionempresa extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Cristaleria',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -881,10 +1104,11 @@ class informacionempresa extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Meseros',
-                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -900,10 +1124,11 @@ class informacionempresa extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Chef',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -919,10 +1144,11 @@ class informacionempresa extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Vinos y Licores',
-                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -1015,11 +1241,10 @@ class imagenesempresa extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30.0),
-          bottomRight: Radius.circular(30.0),
-        ),
+    return Container(
+        height: 360,
+        width: 450,
+   
         child: SizedBox(
           child: Image.network(
             link_imagen,
@@ -1104,8 +1329,9 @@ class Menuinfo extends StatelessWidget {
 }
 
 class imagenesmenu extends StatelessWidget {
-  imagenesmenu({required this.link_imagen});
+  imagenesmenu({required this.link_imagen, required this.id_empresa});
   final String link_imagen;
+  final String id_empresa;
 
   @override
   Widget build(BuildContext context) {
@@ -1120,12 +1346,12 @@ class imagenesmenu extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
           child: InkWell(
             onTap: () {
-              /*Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CompanyPage(id_empresa: id_emp),
+                  builder: (context) => MenuPage(id_empresa: id_empresa),
                 ),
-              );*/
+              );
             },
             child: Padding(
               padding: const EdgeInsets.all(0),
@@ -1195,10 +1421,11 @@ class informacionespecialidades extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Bodas',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -1215,10 +1442,11 @@ class informacionespecialidades extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'XV años',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -1235,10 +1463,11 @@ class informacionespecialidades extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Eventos',
-                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -1254,10 +1483,11 @@ class informacionespecialidades extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Cumpleaños',
-                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),
@@ -1274,10 +1504,11 @@ class informacionespecialidades extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         'Otros',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontSize: 15,
-                        color: Color.fromARGB(246, 134, 129, 120),
-                      ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontSize: 15,
+                                  color: Color.fromARGB(246, 134, 129, 120),
+                                ),
                       ),
                     ]),
                   ),

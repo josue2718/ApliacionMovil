@@ -1,15 +1,15 @@
 
 import 'package:cateringmid/Hreservas/consts.dart';
+import 'package:cateringmid/Hreservas/pagoreserva.dart';
 import 'package:cateringmid/Reservas/reservamodelo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'login/login.dart'; 
 import 'login/apinewaccoutn.dart'; 
 import 'login/Createaccount.dart'; 
 import 'package:flutter/services.dart';
 void main() { 
-   Stripe.publishableKey = stripePublishableKey;
+
     WidgetsFlutterBinding.ensureInitialized();
   // Fijar orientación a solo vertical
   SystemChrome.setPreferredOrientations([
@@ -160,7 +160,11 @@ class _MyHomePageState extends State<MyHomePage1> {
                 const SizedBox(height: 20),
                 TextButton(
                   onPressed: () {
-                    print("Botón 3 presionado");
+                     Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MercadoPagoScreen(),
+                ));
                   },
                  style: TextButton.styleFrom(
                   fixedSize: const Size(350, 50), // Ancho fijo de 350 y alto de 50

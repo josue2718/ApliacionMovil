@@ -11,7 +11,8 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   ApiclassSearch empresasSearch = ApiclassSearch();
-  List<EmpresasSearch> nombresFiltrados = []; // Cambié el tipo de lista a List<EmpresasSearch>
+  List<EmpresasSearch> nombresFiltrados =
+      []; // Cambié el tipo de lista a List<EmpresasSearch>
   TextEditingController searchController = TextEditingController();
   bool isLoading = true;
 
@@ -22,12 +23,15 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> _cargarDatos() async {
-    await empresasSearch.fetchEmpresaData(); // Espera a que los datos se carguen
+    await empresasSearch
+        .fetchEmpresaData(); // Espera a que los datos se carguen
 
     setState(() {
       // Mantén los objetos completos de las empresas en nombresFiltrados
-      nombresFiltrados = empresasSearch.empresassearch; // Ahora nombresFiltrados contiene los objetos completos
-      isLoading = false; // Cambia el estado a false una vez que los datos están cargados
+      nombresFiltrados = empresasSearch
+          .empresassearch; // Ahora nombresFiltrados contiene los objetos completos
+      isLoading =
+          false; // Cambia el estado a false una vez que los datos están cargados
     });
   }
 
@@ -35,7 +39,8 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       // Filtra las empresas por nombre, manteniendo los objetos completos
       nombresFiltrados = empresasSearch.empresassearch
-          .where((empresa) => empresa.nombre.toLowerCase().contains(query.toLowerCase()))
+          .where((empresa) =>
+              empresa.nombre.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
@@ -59,7 +64,8 @@ class _SearchPageState extends State<SearchPage> {
                   const SnackBar(content: Text('Notificaciones')),
                 );
               },
-              icon: const Icon(Icons.notifications, color: Colors.white, size: 30),
+              icon: const Icon(Icons.notifications,
+                  color: Colors.white, size: 30),
             ),
           ],
         ),
@@ -74,40 +80,52 @@ class _SearchPageState extends State<SearchPage> {
                 autofocus: true,
                 onChanged: filtrarNombres,
                 decoration: InputDecoration(
-                labelText: "Buscar",
-                labelStyle: TextStyle(color:  Color(0xFF670A0A)), // Color del texto cuando no está enfocado
-                prefixIcon: Icon(Icons.search, color:  Color(0xFF670A0A)),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color:  Color(0xFF670A0A)), // Color del borde inactivo
+                  labelText: "Buscar",
+                  labelStyle: TextStyle(
+                      color: Color(
+                          0xFF670A0A)), // Color del texto cuando no está enfocado
+                  prefixIcon: Icon(Icons.search, color: Color(0xFF670A0A)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(
+                        color: Color(0xFF670A0A)), // Color del borde inactivo
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(
+                        color: Color(
+                            0xFF670A0A)), // Color del borde cuando está inactivo
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(
+                        color: Color(0xFF670A0A),
+                        width: 2), // Borde cuando está activo
+                  ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color:  Color(0xFF670A0A)), // Color del borde cuando está inactivo
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color:  Color(0xFF670A0A), width: 2), // Borde cuando está activo
-                ),
-
-              ),
-              cursorColor:  const Color.fromARGB(255, 0, 0, 0), // Color del cursor cuando se escribe
-
+                cursorColor: const Color.fromARGB(
+                    255, 0, 0, 0), // Color del cursor cuando se escribe
               ),
               const SizedBox(height: 10),
               isLoading
-                  ? Center(child: CircularProgressIndicator()) // Loader mientras se cargan datos
+                  ? Center(
+                      child:
+                          CircularProgressIndicator()) // Loader mientras se cargan datos
                   : nombresFiltrados.isEmpty
-                      ? const Center(child: Text("No se encontraron resultados"))
+                      ? const Center(
+                          child: Text("No se encontraron resultados"))
                       : Expanded(
                           child: ListView.builder(
                             itemCount: nombresFiltrados.length,
                             itemBuilder: (context, index) {
-                              final empresa = nombresFiltrados[index]; // Accede a un solo objeto empresa
+                              final empresa = nombresFiltrados[
+                                  index]; // Accede a un solo objeto empresa
                               return CustomerCart(
                                 empresa: empresa.nombre,
-                                id_empresa: empresa.id_empresa, // Pasa los datos completos de la empresa
-                                link: empresa.link_logo , // Pasa el enlace o una cadena vacía si no existe
+                                id_empresa: empresa
+                                    .id_empresa, // Pasa los datos completos de la empresa
+                                link: empresa
+                                    .link_logo, // Pasa el enlace o una cadena vacía si no existe
                               );
                             },
                           ),
@@ -164,12 +182,14 @@ class CustomerCart extends StatelessWidget {
                     child: Image.network(
                       link,
                       fit: BoxFit.cover,
-                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
                         if (loadingProgress == null) return child;
                         return Center(
                           child: CircularProgressIndicator(
                             value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
                                 : null,
                           ),
                         );
@@ -190,14 +210,15 @@ class CustomerCart extends StatelessWidget {
                           Expanded(
                             child: Text(
                               empresa,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                   ),
-                            
                             ),
                           ),
-                          
                         ],
                       ),
                     ],

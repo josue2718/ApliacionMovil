@@ -71,7 +71,6 @@ void actualizaradicionales(bool Nmobiliario, bool Nblancos, bool Npersonal, bool
     crsitaleria = Ncristaleria;
     mesero = Nmeseros;
     chef = Nchef;
-    actualizarCostos();
     notifyListeners();
   }
   // Método para actualizar la dirección
@@ -81,6 +80,12 @@ void actualizaradicionales(bool Nmobiliario, bool Nblancos, bool Npersonal, bool
     referencias = referenciasNueva;
     notifyListeners();
   }
+
+    void actualizarcostos( double ncosto, double nanticipo) {
+    costo = ncosto;
+    anticipo= nanticipo;
+    notifyListeners();
+  }
   void actualizarDireccionmap(String direccionNueva,double latitudN ,double longitudN) {
     direccion = direccionNueva;
     latitud = latitudN;
@@ -88,21 +93,7 @@ void actualizaradicionales(bool Nmobiliario, bool Nblancos, bool Npersonal, bool
     notifyListeners();
   }
 
-void actualizarCostos() {
-  MenusR reserva = MenusR(); 
-  double Costo = 0.0;
-  double totalcosto = 0.0;
-  double totalanticipo= 00;
 
-  for (var menu in reserva.menureserva) {
-    Costo += menu.cantidad * menu.costo;
-  }
-  totalcosto = Costo*1.15;
-  totalanticipo = totalcosto*.33;
-  costo= totalcosto.roundToDouble();
-  anticipo=totalanticipo.roundToDouble();
-  notifyListeners();
-}
 
 
 

@@ -50,7 +50,7 @@ class _MyHomePageScreenState extends State<MyHomePage> {
     api.fetchEmpresaData(pageNumber);
     apicliente.fetchclienteData();  
   }
-
+ 
   void checkAndReload() async {
     if (api.empresas.isEmpty) {
       pageNumber = 1;

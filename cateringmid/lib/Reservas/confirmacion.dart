@@ -248,7 +248,7 @@ class _confrimacionreserva extends State<confrimacionreserva> {
           return CustomerCart(
             link_imagen: menu.linkImagen,
             nombre: menu.nombre,
-            cantidad: cantidadm.cantidad,
+            cantidad: cantidadm.cantidadt,
           );
         } else {
           return const Padding(

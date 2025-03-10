@@ -12,6 +12,7 @@ class Menus {
   double precio;
   int minPersonas;
   int maxPersonas;
+  int cantidad;
 
   Menus({
     required this.idMenuEmpresa,
@@ -21,6 +22,7 @@ class Menus {
     required this.precio,
     required this.minPersonas,
     required this.maxPersonas,
+    required this.cantidad,
   });
 
   @override
@@ -31,17 +33,17 @@ class Menus {
 
 class Menusreservas {
   String idMenuEmpresa;
-  int cantidad;
+  int cantidadt;
   double costo;
   Menusreservas({
     required this.idMenuEmpresa,
-    required this.cantidad,
+    required this.cantidadt,
     required this.costo
   });
-   Map<String, dynamic> toJson() => {"id_menu_empresa": idMenuEmpresa, "cantidad": cantidad};
+   Map<String, dynamic> toJson() => {"id_menu_empresa": idMenuEmpresa, "cantidad": cantidadt};
   @override
   String toString() {
-    return 'Menusreserva(idMenuEmpresa: $idMenuEmpresa, cantidad: $cantidad)';
+    return 'Menusreserva(idMenuEmpresa: $idMenuEmpresa, cantidad: $cantidadt)';
   }
 }
 class MenusR
@@ -80,6 +82,8 @@ class MenusR
 
   }) {
     if (_menureserva.any((m) => m.idMenuEmpresa == idMenuEmpresa)) {
+       final index = _menureserva.indexWhere((m) => m.idMenuEmpresa == idMenuEmpresa);
+       _menureserva[index].cantidadt = cantidad;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Ya está añadido'),
@@ -93,7 +97,7 @@ class MenusR
 
 final newMenureserva = Menusreservas(
       idMenuEmpresa: idMenuEmpresa,
-      cantidad: cantidad,
+      cantidadt: cantidad,
       costo: costo,
 
     );
@@ -117,7 +121,7 @@ final newMenureserva = Menusreservas(
 
 }
 
-class ReservaMenu {
+class ReservaMenu  with ChangeNotifier {
   static final ReservaMenu _instance = ReservaMenu._internal();
   factory ReservaMenu() {
     return _instance;
@@ -139,6 +143,9 @@ class ReservaMenu {
     required double precio,
     required int minPersonas,
     required int maxPersonas,
+    required int cantidad,
+    
+    
   }) {
     if (_menu.any((m) => m.idMenuEmpresa == idMenuEmpresa)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -148,6 +155,7 @@ class ReservaMenu {
           backgroundColor: Color(0xFF670A0A),
         ),
       );
+   
       return;
     }
 
@@ -159,17 +167,21 @@ class ReservaMenu {
       precio: precio,
       minPersonas: minPersonas,
       maxPersonas: maxPersonas,
+      cantidad: cantidad,
+      
     );
 
     _menu.add(newMenu);
+    
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Menú agregado'),
         backgroundColor: Color(0xFF670A0A),
         duration: const Duration(seconds: 1), 
+        
       ),
     );
-
+   notifyListeners(); 
   }
 
   // Eliminar menú por ID, también recibe el contexto para mostrar el SnackBar

@@ -41,7 +41,10 @@ class Empresa {
   int minPersonas;
   int maxPersonas;
   String informacion;
-  String horario;
+  String horainicio;
+  String horafin;
+  String diainicio;
+  String diafin;
   String linkLogo;
   int premin;
   int estrellas;
@@ -69,7 +72,10 @@ class Empresa {
     required this.minPersonas,
     required this.maxPersonas,
     required this.informacion,
-    required this.horario,
+    required this.horainicio,
+    required this.horafin ,
+    required this.diainicio,
+    required this.diafin,
     required this.linkLogo,
     required this.premin,
     required this.estrellas,
@@ -99,7 +105,10 @@ class Empresa {
       minPersonas: json['min_personas'],
       maxPersonas: json['max_personas'],
       informacion: json['informacion'],
-      horario: json['horario'],
+      horainicio: json['horainicio'],
+      horafin: json['horafin'],
+      diainicio: json['diainicio'],
+      diafin: json['diafin'],
       linkLogo: json['link_logo'],
       premin: json['premin'],
       estrellas: json['estrellas'],
