@@ -155,7 +155,8 @@ Widget _button()
 
 
 
-Widget _bar(){
+
+  Widget _bar(){
   return Padding(
   padding: const EdgeInsets.symmetric(horizontal: 70, vertical:30 ),
   child:  
@@ -174,9 +175,9 @@ Widget _bar(){
                 ),
                 ),
                 Container(
-                  width: 60,
+                  width: 40,
                   height: 2,
-                  color:  Colors.grey, // Estado actual
+                  color: Color(0xFF670A0A), // Estado actual/ Estado actual
                 ),
               ],
             ),
@@ -192,11 +193,34 @@ Widget _bar(){
                 height: 20,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
+                 color: Color(0xFF670A0A), // Estado actual
+                ),
+                ),
+                Container(
+                  width: 40,
+                  height: 2,
+                  color: Colors.grey, // Estado actual
+                ),
+              ],
+            ),
+            
+          
+          ],
+        ),
+        Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
                   color: Colors.grey, // Estado actual
                 ),
                 ),
                 Container(
-                  width: 60,
+                  width: 40,
                   height: 2,
                   color: Colors.grey, // Estado actual
                 ),
@@ -219,30 +243,7 @@ Widget _bar(){
                 ),
                 ),
                 Container(
-                  width: 60,
-                  height: 2,
-                  color: Colors.grey, // Estado actual
-                ),
-              ],
-            ),
-            
-          
-          ],
-        ),
-         Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.grey, // Estado actual
-                ),
-                ),
-                Container(
-                  width: 60,
+                  width: 40,
                   height: 2,
                   color: Colors.grey, // Estado actual
                 ),
@@ -275,6 +276,7 @@ Widget _bar(){
     )
   );
 }
+
 
 Widget _servicios()
   {
@@ -382,7 +384,7 @@ Widget _paso()
             child: Column(
               children: [
                 Text(
-                  'Paso 1 de 4', // Usamos la variable que corresponde a la empresa
+                  'Paso 2 de 4', // Usamos la variable que corresponde a la empresa
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,

@@ -462,7 +462,7 @@ Widget _bar(){
                 ),
                 ),
                 Container(
-                  width: 60,
+                  width: 40,
                   height: 2,
                   color:  Colors.grey, // Estado actual
                 ),
@@ -484,7 +484,30 @@ Widget _bar(){
                 ),
                 ),
                 Container(
-                  width: 60,
+                  width: 40,
+                  height: 2,
+                  color: Colors.grey, // Estado actual
+                ),
+              ],
+            ),
+            
+          
+          ],
+        ),
+        Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey, // Estado actual
+                ),
+                ),
+                Container(
+                  width: 40,
                   height: 2,
                   color: Colors.grey, // Estado actual
                 ),
@@ -507,7 +530,7 @@ Widget _bar(){
                 ),
                 ),
                 Container(
-                  width: 60,
+                  width: 40,
                   height: 2,
                   color: Colors.grey, // Estado actual
                 ),

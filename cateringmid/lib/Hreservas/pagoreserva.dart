@@ -26,10 +26,22 @@ class Apipago {
         "cantidad": 1
       
       }),
+      
+      
     ); print(responseCliente.body);
     if (responseCliente.statusCode == 200) {
       final data = json.decode(responseCliente.body);
-     
+      
+      var body = json.encode({
+  "id_cliente": id_cliente,
+  "id_empresa": id_empresa,
+  "id_reserva": id_reserva,
+  "producto": "pago de servicio a ${empresa}",
+  "precio": 50,
+  "cantidad": 1
+});
+      print(body);
+     print(data);
         preferenceId =  data["value"]["redirect_url"];
         
 
