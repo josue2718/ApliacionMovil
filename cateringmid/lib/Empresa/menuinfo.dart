@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:cateringmid/Empresa/menu.dart';
+import 'package:cateringmid/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -276,32 +278,10 @@ class _CompanyState extends State<MenuinfoPage> {
    );
   }
 
-  Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () {
-    final listaEmpresas = apiempresaclass.empresas; // Asumiendo que apiempresaclass.empresas es List<Empresa> 
-      if (listaEmpresas.isNotEmpty) { // Verifica que la lista no esté vacía
-        final idEmpresa = listaEmpresas[0].idEmpresa; // Obtiene el idEmpresa del primer elemento (índice 0)
+  
 
-          Navigator.push(
-          context,
-          MaterialPageRoute(
-          builder: (context) => MenuSelectPage(id_empresa: idEmpresa),
-          ),
-          );
-        }
-       else {
 
-      }
-        },
-    
-    backgroundColor:Color(0xFF670A0A) ,
-    child: Icon(
-      Icons.add_circle_outline_sharp ,
-      color: Color.fromARGB(255, 255, 255, 255),
-    ),
-    );
-  }
+
 
 Widget _platillo()
 {
@@ -456,29 +436,101 @@ if(cantidad == 0){
                       ],
                     )),
                 const Spacer(),
-                ElevatedButton(
-                  onPressed: () {
-                     
-                    setState(() {
-                    reservamenu.add(context: context, idMenuEmpresa: menu.idMenuEmpresa, idEmpresa: menu.idEmpresa, nombre: menu.nombre, linkImagen: menu.linkImagen, precio: menu.precio, minPersonas: menu.minPersonas, maxPersonas: menu.maxPersonas, cantidad:cantidad);
-                  });
+               ElevatedButton(
+  onPressed: () async {
+    final prefs = await SharedPreferences.getInstance();
+    final id = prefs.getString('id');
 
-          
-
-                  },
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(150, 45),
-                    backgroundColor: const Color.fromRGBO(103, 10, 10, 1),
-                    foregroundColor: const Color.fromARGB(255, 240, 239, 239),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text('Añadir'),
-                    ],
+    if (id == null || id.isEmpty) {
+      // Mostrar diálogo de invitado
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            contentPadding: const EdgeInsets.all(20),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                    width: 150,
+                    height: 150,
+                    child: Image.asset(
+                      'assets/LOGOROJO.png',
+                      errorBuilder: (context, object, stackTrace) {
+                        return const Icon(Icons.error);
+                      },
+                    ),
                   ),
                 ),
+                const SizedBox(height: 20),
+                Text(
+                  'Estás en modo invitado',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF670A0A),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Regístrate o inicia sesión para continuar',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Cierra el diálogo
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SplashScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF670A0A),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Iniciar sesión'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    } else {
+      // Llamar a la función reservamenu.add()
+      reservamenu.add(
+        context: context,
+        idMenuEmpresa: menu.idMenuEmpresa,
+        idEmpresa: menu.idEmpresa,
+        nombre: menu.nombre,
+        linkImagen: menu.linkImagen,
+        precio: menu.precio,
+        minPersonas: menu.minPersonas,
+        maxPersonas: menu.maxPersonas,
+        cantidad: cantidad,
+      );
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    fixedSize: const Size(150, 45),
+    backgroundColor: const Color(0xFF670A0A),
+    foregroundColor: Colors.white,
+  ),
+  child: const Text('Añadir'),
+),
+
               ],
             ),
           ),

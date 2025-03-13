@@ -135,7 +135,7 @@ class _confrimacionreserva extends State<confrimacionreserva> {
             alignment: Alignment.center,
             child: Column(children: [
               Text(
-                'Paso 4 de 4', // Usamos la variable que corresponde a la empresa
+                'Paso 5 de 5', // Usamos la variable que corresponde a la empresa
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontSize: 23,
                       fontWeight: FontWeight.bold,
@@ -167,7 +167,7 @@ class _confrimacionreserva extends State<confrimacionreserva> {
                     ),
                   ),
                   Container(
-                    width: 60,
+                    width: 40,
                     height: 2,
                     color: Color(0xFF670A0A), // Estado actual
                   ),
@@ -188,7 +188,7 @@ class _confrimacionreserva extends State<confrimacionreserva> {
                     ),
                   ),
                   Container(
-                    width: 60,
+                    width: 40,
                     height: 2,
                     color: Color(0xFF670A0A), // Estado actual
                   ),
@@ -209,7 +209,28 @@ class _confrimacionreserva extends State<confrimacionreserva> {
                     ),
                   ),
                   Container(
-                    width: 60,
+                    width: 40,
+                    height: 2,
+                    color: Color(0xFF670A0A), // Estado actual
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF670A0A), // Estado actual
+                    ),
+                  ),
+                  Container(
+                    width: 40,
                     height: 2,
                     color: Color(0xFF670A0A), // Estado actual
                   ),
@@ -342,14 +363,14 @@ class infopago extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: Row(children: [
                     Icon(
-                      Icons.access_time_outlined,
+                      Icons.attach_money_rounded ,
                       color: Color.fromARGB(246, 134, 129, 120),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 5),
                     Text(
-                      'Costo total: ${reservasProvider.costo!}',
+                      'Costo total: \$${reservasProvider.costo!}',
                       style: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 17,
                         color: Color.fromARGB(246, 134, 129, 120),
                         fontWeight: FontWeight.bold,
                       ),
@@ -361,14 +382,15 @@ class infopago extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: Row(children: [
                     Icon(
-                      Icons.calendar_today,
+                      Icons.attach_money_rounded ,
                       color: Color.fromARGB(246, 134, 129, 120),
+                     
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 5),
                     Text(
                       'Anticipo a pagar: \$${reservasProvider.anticipo!}',
                       style: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 17,
                         color: Color.fromARGB(246, 134, 129, 120),
                         fontWeight: FontWeight.bold,
                       ),

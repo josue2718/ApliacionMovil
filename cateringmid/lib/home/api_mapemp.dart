@@ -46,12 +46,14 @@ class ApiclassMapa {
   Future<void> fetchEmpresaData() async {
     if (isLoading || !hasMore) return;
 print('no');
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
+final prefs = await SharedPreferences.getInstance();
+final token = prefs.getString('token');
 
-    if (token == null || token.isEmpty) {
-      return;
-    }
+
+if (token == null || token.isEmpty ) {
+
+}
+
 
     final headers = {'Authorization': 'Bearer $token'};
 
@@ -62,7 +64,6 @@ print('no');
         Uri.parse(
           'https://cateringmidd.azurewebsites.net/api/Empresa/Mapa',
         ),
-        headers: headers,
       );
   print(response.body);
       if (response.statusCode == 200) {

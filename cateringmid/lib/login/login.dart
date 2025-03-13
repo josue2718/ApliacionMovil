@@ -45,15 +45,16 @@ class _LoginState extends State<Login> {
   bool _isObscured = true; // Estado para alternar visibilidad de contraseña
   final PreferencesService _preferencesService = PreferencesService(); // Instancia del servicio
   String? _token;
-  bool? _inicio;
+  String? _inicio;
   String? _id;
 
-  Future<void> _saveToken(String token, bool inicio, String id) async {
+  Future<void> _saveToken(String token, String inicio, String id) async {
     await _preferencesService.savePreferences(token, inicio, id);
     setState(() {
       _token = token;
       _inicio = inicio;
       _id = id;
+      
     });
   }
 
@@ -133,7 +134,7 @@ class _LoginState extends State<Login> {
     if (response != null && response.statusCode == 200) {
       final data = json.decode(response.body);
       if (data != null && data['token'] != null) {
-        await _saveToken(data['token'], true, data['idCliente']);
+        await _saveToken(data['token'], "true", data['idCliente']);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => MyHomePage()),

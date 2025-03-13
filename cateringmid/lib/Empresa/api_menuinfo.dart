@@ -105,12 +105,12 @@ class Apimenuinfoclass {
   if (isLoading || !hasMore) return;
 
   final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token');
+final token = prefs.getString('token');
 
-  if (token == null || token.isEmpty) {
-    return;
-  }
 
+if (token == null || token.isEmpty ) {
+  
+}
   final headers = {
     'Authorization': 'Bearer $token',
   };

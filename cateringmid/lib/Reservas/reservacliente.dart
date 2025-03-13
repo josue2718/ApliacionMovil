@@ -283,7 +283,7 @@ Widget _paso()
             child: Column(
               children: [
                 Text(
-                  'Paso 2 de 4', // Usamos la variable que corresponde a la empresa
+                  'Paso 3 de 5', // Usamos la variable que corresponde a la empresa
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontSize: 23,
                         fontWeight: FontWeight.bold,
@@ -319,7 +319,7 @@ Widget _bar()
                 ),
                 ),
                 Container(
-                  width: 60,
+                  width: 40,
                   height: 2,
                   color: Color(0xFF670A0A), // Estado actual
                 ),
@@ -341,7 +341,29 @@ Widget _bar()
                 ),
                 ),
                 Container(
-                  width: 60,
+                  width: 40,
+                  height: 2,
+                  color: Color(0xFF670A0A), // Estado actual
+                ),
+              ],
+            ),
+           
+          ],
+        ),
+        Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF670A0A), // Estado actual
+                ),
+                ),
+                Container(
+                  width: 40,
                   height: 2,
                   color:  Colors.grey, // Estado actual
                 ),
@@ -364,7 +386,7 @@ Widget _bar()
                 ),
                 ),
                 Container(
-                  width: 60,
+                  width: 40,
                   height: 2,
                   color: Colors.grey, // Estado actual
                 ),

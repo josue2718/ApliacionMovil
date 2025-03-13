@@ -16,7 +16,6 @@ class PreferencesService {
     String? id = prefs.getString(_idKey);
     String? nombre = prefs.getString(_nombre);
     String? imagen = prefs.getString(_imagen);
-
     return {
       'token': token,
       'inicio': inicio,
@@ -27,10 +26,10 @@ class PreferencesService {
   }
 
   // Guardar los valores en SharedPreferences
-  Future<void> savePreferences(String token, bool inicio, String id) async {
+  Future<void> savePreferences(String token, String inicio, String id ) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_tokenKey, token);
-    await prefs.setBool(_inicioKey, inicio);
+    await prefs.setString(_inicioKey, inicio);
     await prefs.setString(_idKey, id);
 
     print(id);

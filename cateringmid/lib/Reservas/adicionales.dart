@@ -156,7 +156,7 @@ Widget _button()
 
 
 
-  Widget _bar(){
+Widget _bar(){
   return Padding(
   padding: const EdgeInsets.symmetric(horizontal: 70, vertical:30 ),
   child:  
@@ -384,7 +384,7 @@ Widget _paso()
             child: Column(
               children: [
                 Text(
-                  'Paso 2 de 4', // Usamos la variable que corresponde a la empresa
+                  'Paso 2 de 5', // Usamos la variable que corresponde a la empresa
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,

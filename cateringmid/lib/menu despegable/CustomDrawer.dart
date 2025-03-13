@@ -1,7 +1,10 @@
 import 'package:cateringmid/Favoritos/misfavoritos.dart';
 import 'package:cateringmid/Hreservas/hreservas.dart';
+import 'package:cateringmid/cache.dart';
 import 'package:cateringmid/home/apicliente.dart';
 import 'package:cateringmid/home/empresasmap.dart';
+import 'package:cateringmid/login/Createaccount.dart';
+import 'package:cateringmid/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Ubicaciones/ubicacion.dart';
@@ -14,12 +17,16 @@ class CustomDrawer extends StatelessWidget {
   Future<Map<String, String?>> _getUserData() async {
        final Apiclienteclass apicliente = Apiclienteclass();
     final prefs = await SharedPreferences.getInstance();
+    print(prefs.getString('inicio'));
 apicliente.fetchclienteData();    
     return {
       'nombre': prefs.getString('nombre'),
       'imagen': prefs.getString('imagen'),
+      'inicio' : prefs.getString('inicio')
+      
     };
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +36,11 @@ apicliente.fetchclienteData();
       child: FutureBuilder<Map<String, String?>>(
         future: _getUserData(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return const Center(child: Text("Error al cargar datos"));
-          }
-
           final nombre = snapshot.data?['nombre'] ?? "Usuario";
           final imagen = snapshot.data?['imagen'];
+          final String? inicioString = snapshot.data?['inicio'];
+          final bool isLoggedIn = inicioString == 'true'; // Convierte el valor String a bool
+          print(inicioString);
 
           return ListView(
             padding: EdgeInsets.zero,
@@ -48,6 +51,7 @@ apicliente.fetchclienteData();
                 ),
                 child: Column(
                   children: [
+                    if (isLoggedIn)
                     ClipRRect(
                       borderRadius: BorderRadius.circular(120),
                       child: SizedBox(
@@ -75,14 +79,17 @@ apicliente.fetchclienteData();
                             
                       ),
                     ),
+                     if (isLoggedIn==false)
+                   const Icon(Icons.account_circle, size: 80, color: Colors.white),
                     const SizedBox(height: 10),
-                    Text(
-                      'Hola, $nombre',
+                     Text(
+                      isLoggedIn ? 'Hola, $nombre' : 'Hola',
                       style: const TextStyle(color: Colors.white, fontSize: 24),
                     ),
                   ],
                 ),
               ),
+              if (isLoggedIn) ...[
               _buildDrawerItem(
                 icon: Icons.home,
                 text: "Home",
@@ -103,11 +110,25 @@ apicliente.fetchclienteData();
                 text: "Mis Favoritos",
                 onTap: () => _navigateTo(context, Misfavoritospage()),
               ),
+              ],
+               if (isLoggedIn==false) ...[
+               _buildDrawerItem(
+                  icon: Icons.account_circle_rounded,
+                  text: "iniciar sesion",
+                  onTap: () => _navigateTo(context, Login()),
+                ),
+                   _buildDrawerItem(
+                  icon: Icons.account_circle_rounded,
+                  text: "Crear cuenta",
+                  onTap: () => _navigateTo(context, Createaccount()),
+                ),
+               ],
               _buildDrawerItem(
                 icon: Icons.logout_rounded,
-                text: "Cerrar sesión",
-                onTap: () => _navigateToAndRemove(context, MyHomePage1()),
+                text: isLoggedIn ? "Cerrar sesión" : "Salir",
+                onTap: () => _navigateToAndRemove(context, SplashScreen()),
               ),
+
             ],
           );
         },
@@ -133,6 +154,8 @@ apicliente.fetchclienteData();
   }
 
   void _navigateToAndRemove(BuildContext context, Widget page) {
+        final PreferencesService _preferencesService = PreferencesService();
+    _preferencesService.clearPreferences();
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => page),

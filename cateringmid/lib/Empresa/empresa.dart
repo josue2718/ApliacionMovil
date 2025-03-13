@@ -587,7 +587,7 @@ Widget _buildLoadingShimmer() {
             child: Row(
               children: [
                 Container(
-                    width: 150,
+                    width: 180,
                     child: Column(
                       children: [
                         Expanded(

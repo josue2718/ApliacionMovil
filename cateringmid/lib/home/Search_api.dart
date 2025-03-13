@@ -45,7 +45,7 @@ print('no');
     final token = prefs.getString('token');
 
     if (token == null || token.isEmpty) {
-      return;
+    
     }
 
     final headers = {'Authorization': 'Bearer $token'};

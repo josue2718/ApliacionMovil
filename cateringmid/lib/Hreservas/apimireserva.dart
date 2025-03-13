@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http; // Importar el paquete http
 import 'dart:convert'; // Para trabajar con JSON
@@ -99,6 +100,7 @@ class StatusClass {
     return 'StatusClass( enviado: $enviado)';
   }
 }
+
 class DireccionClass {
   String idDireccion;
   String idReserva;
@@ -185,7 +187,6 @@ class MenuClass {
   }
 }
 
-
 class Mireservas {
   String idReserva;
   String idCliente;
@@ -205,49 +206,47 @@ class Mireservas {
   bool chef;
   bool meseros;
   int cantidadmeseros;
-  Mireservas({
-    required this.idReserva,
-    required this.idCliente,
-    required this.idEmpresa,
-    required this.empresaNombre,
-    required this.empresaLogo,
-    required this.fecha,
-    required this.hora,
-    required this.costo,
-    required this.anticipo,
-    required this.horas,
-    required this.contrato,
-    required this.mobiliario,
-    required this.blancos,
-    required this.personal,
-    required this.cristaleria,
-    required this.chef,
-    required this.meseros,
-    required this.cantidadmeseros
-  });
+  Mireservas(
+      {required this.idReserva,
+      required this.idCliente,
+      required this.idEmpresa,
+      required this.empresaNombre,
+      required this.empresaLogo,
+      required this.fecha,
+      required this.hora,
+      required this.costo,
+      required this.anticipo,
+      required this.horas,
+      required this.contrato,
+      required this.mobiliario,
+      required this.blancos,
+      required this.personal,
+      required this.cristaleria,
+      required this.chef,
+      required this.meseros,
+      required this.cantidadmeseros});
 
   // Convertir JSON a un objeto Mireservas
   factory Mireservas.fromJson(Map<String, dynamic> json) {
     return Mireservas(
-      idReserva: json['id_reserva'],
-      idCliente: json['id_cliente'],
-      idEmpresa: json['id_empresa'],
-      empresaNombre: json['empresaNombre'],
-      empresaLogo: json['empresalogo'],
-      fecha: json['fecha'],
-      hora: json['hora'],
-      costo: json['costo'],
-      anticipo:json['anticipo'],
-      horas: json['horas'],
-      contrato: json['contrato'],
-      mobiliario: json['mobiliario'],
-      blancos: json['blancos'],
-      personal: json['personal'],
-      cristaleria: json['cristaleria'],
-      chef: json['chef'],
-      meseros: json['meseros'],
-      cantidadmeseros:json['cantidadmeseros']
-    );
+        idReserva: json['id_reserva'],
+        idCliente: json['id_cliente'],
+        idEmpresa: json['id_empresa'],
+        empresaNombre: json['empresaNombre'],
+        empresaLogo: json['empresalogo'],
+        fecha: json['fecha'],
+        hora: json['hora'],
+        costo: json['costo'],
+        anticipo: json['anticipo'],
+        horas: json['horas'],
+        contrato: json['contrato'],
+        mobiliario: json['mobiliario'],
+        blancos: json['blancos'],
+        personal: json['personal'],
+        cristaleria: json['cristaleria'],
+        chef: json['chef'],
+        meseros: json['meseros'],
+        cantidadmeseros: json['cantidadmeseros']);
   }
 
   // Convertir un objeto Mireservas a JSON
@@ -270,7 +269,7 @@ class Mireservas {
       'cristaleria': cristaleria,
       'chef': chef,
       'meseros': meseros,
-      "cantidadmeseros":cantidadmeseros
+      "cantidadmeseros": cantidadmeseros
     };
   }
 
@@ -280,19 +279,67 @@ class Mireservas {
   }
 }
 
-
 class Apimireserva {
   //List<Menusinfo> menuinfo = [];  // Lista de empresas
-  List<Mireservas> inforeserva =[]; 
-   List<InfoClienteClass> infocliente =[]; 
-   List<DireccionClass> infodireccion =[]; 
-   List<StatusClass> infoestatus =[];
-    List<MenuClass> infomenu =[]; 
+  List<Mireservas> inforeserva = [];
+  List<InfoClienteClass> infocliente = [];
+  List<DireccionClass> infodireccion = [];
+  List<StatusClass> infoestatus = [];
+  List<MenuClass> infomenu = [];
   int pageNumber = 1;
   bool isLoading = false;
   bool hasMore = true;
 
   Future<void> fetchMenuinfoData(String id_reserva) async {
+    if (isLoading || !hasMore) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    final headers = {
+      'Authorization': 'Bearer $token',
+    };
+
+    try {
+      isLoading = true;
+      final response = await http.get(
+        Uri.parse(
+          'https://cateringmidd.azurewebsites.net/api/Reservas/Id/$id_reserva',
+        ),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+
+        inforeserva.clear();
+        infocliente.clear();
+        infodireccion.clear();
+        infomenu.clear();
+        inforeserva.add(Mireservas.fromJson(jsonResponse));
+        //infocliente.add(InfoClienteClass.fromJson(jsonResponse['reserva_Info_Cliente']));
+        infodireccion.add(
+            DireccionClass.fromJson(jsonResponse['reserva_direccions'][0]));
+        infocliente.add(InfoClienteClass.fromJson(
+            jsonResponse['reserva_Info_Clientes'][0]));
+        infoestatus
+            .add(StatusClass.fromJson(jsonResponse['estatus_Reservas'][0]));
+
+        final List<dynamic> data = jsonResponse['hMenu_Reservas'] ?? [];
+
+        // Agregar las imágenes filtradas a la lista
+        infomenu.addAll(data.map((item) => MenuClass.fromJson(item)).toList());
+      } else if (response.statusCode == 401) {
+      } else {
+        throw Exception('Error al cargar datos: ${response.statusCode}');
+      }
+    } catch (e) {
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  Future<void> deleteMenuinfoData(String id_reserva , BuildContext context) async {
   if (isLoading || !hasMore) return;
 
   final prefs = await SharedPreferences.getInstance();
@@ -304,46 +351,41 @@ class Apimireserva {
 
   try {
     isLoading = true;
-    final response = await http.get(
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Evita que el usuario cierre el diálogo manualmente
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: Color(0xFF670A0A),
+            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          ),
+        );
+      },
+    );
+
+    final response = await http.delete(
       Uri.parse(
-        'https://cateringmidd.azurewebsites.net/api/Reservas/Id/$id_reserva',
+        'https://cateringmidd.azurewebsites.net/api/Reservas/$id_reserva',
       ),
       headers: headers,
     );
 
 
     if (response.statusCode == 200) {
-
-       final jsonResponse = json.decode(response.body);
-
-        inforeserva.clear();
-        infocliente.clear();
-        infodireccion.clear();
-        infomenu.clear();
-        inforeserva.add(Mireservas.fromJson(jsonResponse));
-        //infocliente.add(InfoClienteClass.fromJson(jsonResponse['reserva_Info_Cliente']));
-        infodireccion.add(DireccionClass.fromJson(jsonResponse['reserva_direccions'][0]));
-        infocliente.add(InfoClienteClass.fromJson(jsonResponse['reserva_Info_Clientes'][0]));
-        infoestatus.add(StatusClass.fromJson(jsonResponse['estatus_Reservas'][0]));
-        
-      final List<dynamic> data = jsonResponse['hMenu_Reservas'] ?? [];
-
-        // Agregar las imágenes filtradas a la lista
-        infomenu.addAll(data.map((item) => MenuClass.fromJson(item)).toList());
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Reserva eliminada"), backgroundColor: const Color(0xFF670A0A)),
+    );
+       
 
     } else if (response.statusCode == 401) {
 
     } else {
-      throw Exception('Error al cargar datos: ${response.statusCode}');
+      throw Exception('Error al eliminar datos: ${response.statusCode}');
     }
   } catch (e) {
 
-  } finally {
-    isLoading = false;
   }
 }
-
-
 }
-
-

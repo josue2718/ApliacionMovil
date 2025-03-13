@@ -55,14 +55,16 @@ class Apiclass {
   set loading(bool loading) {}
 
   Future<void> fetchEmpresaData(int Number) async {
+    print("llamando empresas");
     if (isLoading || !hasMore) return;
 
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
+   final prefs = await SharedPreferences.getInstance();
+final token = prefs.getString('token');
 
-    if (token == null || token.isEmpty) {
-      return;
-    }
+
+if (token == null || token.isEmpty ) {
+
+}
 
     final headers = {'Authorization': 'Bearer $token'};
 
@@ -75,7 +77,7 @@ class Apiclass {
         ),
         headers: headers,
       );
-
+      print(response.statusCode);
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> data = jsonResponse['data'];

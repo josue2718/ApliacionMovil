@@ -45,7 +45,7 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
 
   // Método para guardar el token en la memoria local
   Future<void> _saveToken(String token, String id) async {
-    await _preferencesService.savePreferences(token, true, id);
+    await _preferencesService.savePreferences(token, "true", id);
   }
 
  Future<void> enviarcuenta(BuildContext context) async {
@@ -91,6 +91,19 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
   }
 
   Future<void> crearcuenta(BuildContext context,String url) async {
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Evita que el usuario cierre el diálogo manualmente
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: Color(0xFF670A0A),
+            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          ),
+        );
+      },
+    );
     try {
       final crear = Provider.of<CrearcuentaProvider>(context, listen: false);
       
@@ -120,7 +133,7 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
           _generatetoken(context, idCliente);
           
         } else {
-          throw Exception('Error al crear el cliente');
+  
         }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -143,16 +156,31 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
       final dataToken = json.decode(responseToken.body);
       final token = dataToken['token'];
       await _saveToken(token, idCliente);
+       Navigator.pop(context); 
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => MyHomePage()),
       );
     } else {
-      throw Exception('Error al generar el token');
+     
+     Navigator.pop(context); 
     }
+
 }
 
 Future<void> cuentasinimg(BuildContext context) async {
+  showDialog(
+      context: context,
+      barrierDismissible: false, // Evita que el usuario cierre el diálogo manualmente
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: Color(0xFF670A0A),
+            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          ),
+        );
+      },
+    );
    
       final crear = Provider.of<CrearcuentaProvider>(context, listen: false);
 
@@ -179,7 +207,7 @@ Future<void> cuentasinimg(BuildContext context) async {
           _generatetoken1(context, idCliente);
           
         } else {
-          throw Exception('Error al crear el cliente');
+
         }
 
   }
@@ -198,13 +226,17 @@ Future<void> cuentasinimg(BuildContext context) async {
       final dataToken = json.decode(responseToken.body);
       final token = dataToken['token'];
       await _saveToken(token, idCliente);
+      
+     Navigator.pop(context); 
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => MyHomePage()),
       );
     } else {
-      throw Exception('Error al generar el token');
+Navigator.pop(context); 
     }
+
+     
 }
 
 

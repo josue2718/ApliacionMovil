@@ -345,7 +345,7 @@ Widget _bottomBar(BuildContext context) {
             child: Row(
               children: [
                 Container(
-                    width: 150,
+                    width: 180,
                     child: Column(
                       children: [
                         Expanded(

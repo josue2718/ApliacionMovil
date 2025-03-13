@@ -58,22 +58,8 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
   LatLng? selectedLocation;
   Position? userLocation;
 
- /* void _onMarkerTapped() {
-    if (_formKey.currentState?.validate() ?? false) {
-      Provider.of<ReservasProvider>(context, listen: false).actualizarDireccion(
-          _usernamelocalController.text,
-          _usernumberController.text,
-          _userreferensController.text);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LocationPickerScreen()), 
-      );
-    }
-  } */
 
- // chupala geovani
- // succionala 
- // chupala rico
+
 
   Future<void> _getUserLocation() async {
     try {
@@ -219,7 +205,7 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
                     ),
                   ),
                   Container(
-                    width: 60,
+                    width: 40,
                     height: 2,
                     color: Color(0xFF670A0A), // Estado actual
                   ),
@@ -240,7 +226,7 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
                     ),
                   ),
                   Container(
-                    width: 60,
+                    width: 40,
                     height: 2,
                     color: Color(0xFF670A0A), // Estado actual
                   ),
@@ -261,7 +247,28 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
                     ),
                   ),
                   Container(
-                    width: 60,
+                    width: 40,
+                    height: 2,
+                    color: Color(0xFF670A0A), // Estado actual
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF670A0A), // Estado actual
+                    ),
+                  ),
+                  Container(
+                    width: 40,
                     height: 2,
                     color: Colors.grey, // Estado actual
                   ),
@@ -378,64 +385,7 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
     ]);
   }
 
- /*  Widget _datosubicacion() {
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Container(
-        alignment: Alignment.topLeft,
-        child: Column(children: [
-          SizedBox(height: 30),
-          Row(children: [
-            Icon(
-              Icons.location_on,
-              size: 20,
-              color: const Color(0xFF670A0A), // Color del ícono
-            ),
-            Text(
-              'Ubicacion',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: 23,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF670A0A),
-                  ),
-            ),
-          ]),
-          SizedBox(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Card(
-              clipBehavior: Clip.antiAlias,
-              child: Container(
-                height: 150,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: selectedLocation == null
-                    ? Center(child: CircularProgressIndicator())
-                    : GoogleMap(
-                        onMapCreated: (controller) {
-                          setState(() {
-                            mapController = controller;
-                          });
-                        },
-                        initialCameraPosition: CameraPosition(
-                          target: selectedLocation!,
-                          zoom: 15,
-                        ),
-                        markers: {
-                          Marker(
-                            markerId: MarkerId("seleccionado"),
-                            position: selectedLocation!,
-                            onTap: _onMarkerTapped,
-                          ),
-                        },
-                      ),
-              ),
-            ),
-          ),
-        ]),
-      ),
-    ]);
-  } */
+ 
 
   Widget _paso() {
     return Padding(
@@ -446,7 +396,7 @@ class _ReservaubicacionState extends State<Reservaubicacion> {
             alignment: Alignment.center,
             child: Column(children: [
               Text(
-                'Paso 3 de 4', // Usamos la variable que corresponde a la empresa
+                'Paso 4 de 5', // Usamos la variable que corresponde a la empresa
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontSize: 23,
                       fontWeight: FontWeight.bold,
