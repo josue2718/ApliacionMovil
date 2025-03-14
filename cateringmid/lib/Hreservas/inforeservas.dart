@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:cateringmid/Hreservas/apimireserva.dart';
+import 'package:cateringmid/Hreservas/estatus.dart';
 import 'package:cateringmid/Hreservas/pagoreserva.dart';
 import 'package:cateringmid/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:provider/provider.dart';
 
@@ -138,6 +139,8 @@ class _infohreserva extends State<infohreserva> {
                   pago: estatus.pago,
                   preparando: estatus.preparando,
                   enviando: estatus.enviando,
+                  entregado: estatus.entregado,
+                  confirmado: estatus.confirmado,
                   completado: estatus.completado,
                   cancelado: estatus.cancelado)
             ],
@@ -249,13 +252,16 @@ class _infohreserva extends State<infohreserva> {
                   preparando: estatus.preparando,
                   enviando: estatus.enviando,
                   completado: estatus.completado,
+                  confirmado: estatus.confirmado,
+                  entregado: estatus.entregado,
                   cancelado: estatus.cancelado,
                   id_cliente: info.idCliente ,
                   id_empresa: info.idEmpresa,
                   id_reserva: info.idReserva,
+                  id_estatus: estatus.id,
                   nombre: info.empresaNombre,
                   precio: info.anticipo,
-                  
+                  fecha: info.fecha,
                   )
             ],
           );
@@ -439,6 +445,8 @@ class Estatus extends StatelessWidget {
   final bool pago;
   final bool preparando;
   final bool enviando;
+  final bool entregado;
+  final bool confirmado;
   final bool completado;
   final bool cancelado;
 
@@ -448,6 +456,8 @@ class Estatus extends StatelessWidget {
     required this.pago,
     required this.preparando,
     required this.enviando,
+    required this.entregado,
+    required this.confirmado,
     required this.completado,
     required this.cancelado,
   });
@@ -605,6 +615,37 @@ class Estatus extends StatelessWidget {
                 const SizedBox(width: 10),
                 const Text(
                   'Tu servicio está en camino',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF670A0A), // Estado actual
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+             if (!cancelado && (entregado || completado))
+            Row(
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF670A0A), // Estado actual
+                      ),
+                    ),
+                    Container(
+                      width: 2,
+                      height: 30,
+                      color: const Color(0xFF670A0A), // Estado actual
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 10),
+                const Text(
+                  'Tu servicio ya se entrego, confirma la antrega',
                   style: TextStyle(
                     fontSize: 13,
                     color: Color(0xFF670A0A), // Estado actual
@@ -1198,16 +1239,20 @@ class nombreempresa extends StatelessWidget {
 }
 
 class Buttonclass extends StatelessWidget {
-  final bool enviado;
+    final bool enviado;
   final bool aceptado;
   final bool pago;
   final bool preparando;
   final bool enviando;
+  final bool entregado;
+  final bool confirmado;
   final bool completado;
   final bool cancelado;
   final String id_empresa;
   final String id_cliente;
   final String id_reserva;
+  final String id_estatus;
+  final String fecha;
   final String nombre;
   final double precio;
 
@@ -1218,11 +1263,15 @@ class Buttonclass extends StatelessWidget {
     required this.pago,
     required this.preparando,
     required this.enviando,
+    required this.entregado,
+    required this.confirmado,
     required this.completado,
     required this.cancelado,
     required this.id_empresa,
     required this.id_cliente,
     required this.id_reserva,
+    required this.id_estatus,
+    required this.fecha,
     required this.nombre,
     required this.precio,
   });
@@ -1230,14 +1279,18 @@ class Buttonclass extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-       final Apipago pagar = Apipago ();
+  final  Apiestatus estatus =  Apiestatus();
+    final Apipago pagar = Apipago ();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
       child: Column(
         children: [
           if (!cancelado && !pago && !aceptado && !completado  && (enviado ))
             ElevatedButton(
-              onPressed: () {},
+             onPressed: () {
+           estatus.cancelar(context: context,fecha:fecha, id_reserva: id_reserva,id_estatus: id_estatus,pagado: pago);
+
+            },
               style: ElevatedButton.styleFrom(
                 fixedSize:
                     const Size(200, 50), // Ancho fijo de 250 y alto de 50
@@ -1255,7 +1308,7 @@ class Buttonclass extends StatelessWidget {
           if (!cancelado && !pago && !completado  && aceptado )
             ElevatedButton(
               onPressed: () {
-                  pagar.crearPreferencia(id_empresa: id_empresa, id_cliente: id_cliente, id_reserva: id_reserva, empresa: nombre, precio: precio);
+                  pagar.crearPreferencia(id_empresa: id_empresa, id_cliente: id_cliente, id_reserva: id_reserva,id_estatus: id_estatus,empresa: nombre, precio: precio);
               
 
               },
@@ -1275,7 +1328,10 @@ class Buttonclass extends StatelessWidget {
             ),
           if (pago &&  !completado  &&  !preparando &&!cancelado )
            ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+           estatus.cancelar(context: context,fecha:fecha, id_reserva: id_reserva,id_estatus: id_estatus,pagado: pago);
+
+      },
       style: ElevatedButton.styleFrom(
         fixedSize: const Size(200, 50), // Ancho fijo de 250 y alto de 50
         backgroundColor: const Color(0xFF670A0A),
@@ -1291,9 +1347,47 @@ class Buttonclass extends StatelessWidget {
     ),
 
            
-    if (!cancelado && ( completado))
+    if (!cancelado && ( entregado &&  !completado ))
            ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+showDialog(
+  context: context,
+  builder: (BuildContext dialogContext) {
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      contentPadding: const EdgeInsets.all(20),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+                  'Confirma la reserva con este QR',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF670A0A),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+          SizedBox(
+            width: 200, // Ajusta el tamaño si es necesario
+            height: 200,
+            child: QrImageView(
+              data: "https://www.ejemplo.com",
+              version: QrVersions.auto,
+              size: 200.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  },
+);
+
+      },
       style: ElevatedButton.styleFrom(
         fixedSize: const Size(200, 50), // Ancho fijo de 250 y alto de 50
         backgroundColor: const Color(0xFF670A0A),
@@ -1309,7 +1403,9 @@ class Buttonclass extends StatelessWidget {
     ),
           if (cancelado)
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                 estatus.eliminar(context: context,id_reserva: id_reserva);
+              },
               style: ElevatedButton.styleFrom(
                 fixedSize:
                     const Size(200, 50), // Ancho fijo de 250 y alto de 50

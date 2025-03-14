@@ -51,20 +51,26 @@ class InfoClienteClass {
 }
 
 class StatusClass {
+  String id;
   bool enviado;
   bool aceptado;
   bool pago;
   bool preparando;
   bool enviando;
+  bool confirmado;
+  bool entregado;
   bool completado;
   bool cancelado;
 
   StatusClass({
+    required this.id,
     required this.enviado,
     required this.aceptado,
     required this.pago,
     required this.preparando,
     required this.enviando,
+    required this.entregado,
+    required this.confirmado,
     required this.completado,
     required this.cancelado,
   });
@@ -72,11 +78,14 @@ class StatusClass {
   // Convertir JSON a un objeto StatusClass
   factory StatusClass.fromJson(Map<String, dynamic> json) {
     return StatusClass(
+      id :json['id_estatus'],
       enviado: json['enviado'],
       aceptado: json['aceptado'],
       pago: json['pago'],
       preparando: json['preparando'],
       enviando: json['enviando'],
+      entregado: json['entregado'],
+      confirmado: json['confirmado'],
       completado: json['completado'],
       cancelado: json['cancelado'],
     );
@@ -90,6 +99,8 @@ class StatusClass {
       'pago': pago,
       'preparando': preparando,
       'enviando': enviando,
+      'confirmado': confirmado,
+      'entregado': entregado,
       'completado': completado,
       'cancelado': cancelado,
     };
