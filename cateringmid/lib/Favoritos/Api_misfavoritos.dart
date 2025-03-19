@@ -68,7 +68,7 @@ class Apimisfavoritos {
       isLoading = true;
       final response = await http.get(
         Uri.parse(
-          'https://cateringmidd.azurewebsites.net/api/Favorito/Cliente/$id_cliente',
+          'https://cateringmid.azurewebsites.net/api/Favorito/Cliente/$id_cliente',
         ),
         headers: headers,
       );
@@ -105,7 +105,7 @@ class Apimisfavoritos {
       isLoading = true;
       final response = await http.delete(
         Uri.parse(
-          'https://cateringmidd.azurewebsites.net/api/Favorito/$id',
+          'https://cateringmid.azurewebsites.net/api/Favorito/$id',
         ),
         headers: headers,
       );

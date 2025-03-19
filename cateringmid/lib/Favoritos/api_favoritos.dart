@@ -23,7 +23,7 @@ class Favoritos {
       return; // Evita enviar la solicitud si el id_cliente es nulo
     }
 
-    final url = Uri.parse('https://cateringmidd.azurewebsites.net/api/Favorito');
+    final url = Uri.parse('https://cateringmid.azurewebsites.net/api/Favorito');
 
     final response = await http.post(
       url,

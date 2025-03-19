@@ -19,7 +19,7 @@ class Logincuenta {
     Future<void> login(BuildContext context) async {
       final prefs = await SharedPreferences.getInstance();
 final id= prefs.getString('id');
-    final urlToken = Uri.parse('https://cateringmidd.azurewebsites.net/api/AuthClient/login/id');
+    final urlToken = Uri.parse('https://cateringmid.azurewebsites.net/api/AuthClient/login/id');
     final responseToken = await http.post(
       urlToken,
       headers: {

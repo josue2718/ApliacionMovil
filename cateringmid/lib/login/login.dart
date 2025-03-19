@@ -82,7 +82,7 @@ class _LoginState extends State<Login> {
       try {
         response = await http
             .post(
-              Uri.parse('https://cateringmidd.azurewebsites.net/api/AuthClient/login'),
+              Uri.parse('https://cateringmid.azurewebsites.net/api/AuthClient/login'),
               headers: {'Content-Type': 'application/json'},
               body: json.encode({
                 'email': _usernameController.text,

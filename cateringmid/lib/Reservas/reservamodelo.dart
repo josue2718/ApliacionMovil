@@ -133,7 +133,7 @@ void actualizaradicionales(bool Nmobiliario, bool Nblancos, bool Npersonal, bool
     );
   
 
-    final url = Uri.parse('https://cateringmidd.azurewebsites.net/api/Reservas');
+    final url = Uri.parse('https://cateringmid.azurewebsites.net/api/Reservas');
 
     final response = await http.post(
       url,

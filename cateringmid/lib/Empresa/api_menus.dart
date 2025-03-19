@@ -83,7 +83,7 @@ if (token == null || token.isEmpty ) {
     isLoading = true;
     final response = await http.get(
       Uri.parse(
-        'https://cateringmidd.azurewebsites.net/api/MenusEmpresa/Empresa/$id_empresa',
+        'https://cateringmid.azurewebsites.net/api/MenusEmpresa/Empresa/$id_empresa',
       ),
       headers: headers,
     );
@@ -117,7 +117,7 @@ Future<void> _refreshToken() async {
   }
 
   final response = await http.post(
-    Uri.parse('https://cateringmidd.azurewebsites.net/api/auth/refresh'),
+    Uri.parse('https://cateringmid.azurewebsites.net/api/auth/refresh'),
     body: {'refresh_token': refreshToken},
   );
 

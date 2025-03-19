@@ -48,7 +48,7 @@ class Apidateempresaclass {
     isLoading = true;
     final response = await http.get(
       Uri.parse(
-        'https://cateringmidd.azurewebsites.net/api/Reservas/date/${id_empresa}',
+        'https://cateringmid.azurewebsites.net/api/Reservas/date/${id_empresa}',
       ),
       headers: headers,
     );

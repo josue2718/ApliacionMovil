@@ -153,7 +153,7 @@ if (token == null || token.isEmpty ) {
     isLoading = true;
     final response = await http.get(
       Uri.parse(
-        'https://cateringmidd.azurewebsites.net/api/Empresa/${id_empresa}',
+        'https://cateringmid.azurewebsites.net/api/Empresa/${id_empresa}',
       ),
       headers: headers,
     );

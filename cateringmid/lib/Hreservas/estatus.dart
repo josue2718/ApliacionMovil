@@ -18,7 +18,7 @@ class Apiestatus {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     final urlCliente = Uri.parse(
-        'https://cateringmidd.azurewebsites.net/api/Reservas/Estatus/${id_reserva}');
+        'https://cateringmid.azurewebsites.net/api/Reservas/Estatus/${id_reserva}');
     final responseCliente = await http.put(
       urlCliente,
       headers: {
@@ -61,7 +61,7 @@ class Apiestatus {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     final urlCliente = Uri.parse(
-        'https://cateringmidd.azurewebsites.net/api/Reservas/${id_reserva}');
+        'https://cateringmid.azurewebsites.net/api/Reservas/${id_reserva}');
     final responseCliente = await http.delete(
       urlCliente,
       headers: {

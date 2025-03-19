@@ -315,7 +315,7 @@ class Apimireserva {
       isLoading = true;
       final response = await http.get(
         Uri.parse(
-          'https://cateringmidd.azurewebsites.net/api/Reservas/Id/$id_reserva',
+          'https://cateringmid.azurewebsites.net/api/Reservas/Id/$id_reserva',
         ),
         headers: headers,
       );
@@ -378,7 +378,7 @@ class Apimireserva {
 
     final response = await http.delete(
       Uri.parse(
-        'https://cateringmidd.azurewebsites.net/api/Reservas/$id_reserva',
+        'https://cateringmid.azurewebsites.net/api/Reservas/$id_reserva',
       ),
       headers: headers,
     );

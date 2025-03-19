@@ -55,7 +55,7 @@ print('no');
 
       final response = await http.get(
         Uri.parse(
-          'https://cateringmidd.azurewebsites.net/api/Empresa/Search',
+          'https://cateringmid.azurewebsites.net/api/Empresa/Search',
         ),
         headers: headers,
       );

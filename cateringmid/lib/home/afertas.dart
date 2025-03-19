@@ -7,12 +7,11 @@ class Descuentos {
   String idEmpresa;
   String descripcion;
   String linkImagen;
-  int cantidad;
   int porcentaje;
   DateTime fechaInicio;
-  String horaInicio;
+
   DateTime fechaFin;
-  String horaFin;
+
   DateTime fechaCreacion;
 
   Descuentos({
@@ -20,12 +19,11 @@ class Descuentos {
     required this.idEmpresa,
     required this.descripcion,
     required this.linkImagen,
-    required this.cantidad,
     required this.porcentaje,
     required this.fechaInicio,
-    required this.horaInicio,
+
     required this.fechaFin,
-    required this.horaFin,
+
     required this.fechaCreacion,
   });
 
@@ -35,12 +33,9 @@ class Descuentos {
       idEmpresa: json['id_empresa'],
       descripcion: json['descripcion'],
       linkImagen: json['link_imagen'],
-      cantidad: json['cantidad'],
       porcentaje: json['porcentaje'],
       fechaInicio: DateTime.parse(json['fecha_inicio']),
-      horaInicio: json['hora_inicio'],
       fechaFin: DateTime.parse(json['fecha_fin']),
-      horaFin: json['hora_fin'],
       fechaCreacion: DateTime.parse(json['fecha_creacion']),
     );
   }
@@ -51,19 +46,16 @@ class Descuentos {
       'id_empresa': idEmpresa,
       'descripcion': descripcion,
       'link_imagen': linkImagen,
-      'cantidad': cantidad,
       'porcentaje': porcentaje,
       'fecha_inicio': fechaInicio.toIso8601String(),
-      'hora_inicio': horaInicio,
       'fecha_fin': fechaFin.toIso8601String(),
-      'hora_fin': horaFin,
       'fecha_creacion': fechaCreacion.toIso8601String(),
     };
   }
 
   @override
   String toString() {
-    return 'Descuentos(idDescuento: $idDescuento, idEmpresa: $idEmpresa, descripcion: $descripcion, cantidad: $cantidad, porcentaje: $porcentaje, fechaInicio: $fechaInicio, horaInicio: $horaInicio, fechaFin: $fechaFin, horaFin: $horaFin, fechaCreacion: $fechaCreacion)';
+    return 'Descuentos(idDescuento: $idDescuento, idEmpresa: $idEmpresa, descripcion: $descripcion, porcentaje: $porcentaje, fechaInicio: $fechaInicio,';
   }
 }
 
@@ -93,7 +85,7 @@ if (token == null || token.isEmpty ) {
       
       final response = await http.get(
         Uri.parse(
-          'https://cateringmidd.azurewebsites.net/api/Descuentos',
+          'https://cateringmid.azurewebsites.net/api/Descuentos',
         ),
         headers: headers,
       );
@@ -127,7 +119,7 @@ Future<void> _refreshToken() async {
   }
 
   final response = await http.post(
-    Uri.parse('https://cateringmidd.azurewebsites.net/api/auth/refresh'),
+    Uri.parse('https://cateringmid.azurewebsites.net/api/auth/refresh'),
     body: {'refresh_token': refreshToken},
   );
 

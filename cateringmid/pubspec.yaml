@@ -31,7 +31,7 @@ dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/logoinicial.png"
+  image_path: "assets/logophone.png"
 
 
 dev_dependencies:

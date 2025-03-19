@@ -17,7 +17,7 @@ class Apipago {
       required String empresa,
       required double precio}) async {
     final urlCliente = Uri.parse(
-        'https://cateringmidd.azurewebsites.net/api/pagos/crear-preferencia');
+        'https://cateringmid.azurewebsites.net/api/pagos/crear-preferencia');
     final responseCliente = await http.post(
       urlCliente,
       headers: {
@@ -60,7 +60,7 @@ class Apipago {
     final token = prefs.getString('token');
 
     final urlCliente = Uri.parse(
-        'https://cateringmidd.azurewebsites.net/api/Reservas/Estatus/${id_reserva}');
+        'https://cateringmid.azurewebsites.net/api/Reservas/Estatus/${id_reserva}');
     final responseCliente = await http.put(
       urlCliente,
       headers: {

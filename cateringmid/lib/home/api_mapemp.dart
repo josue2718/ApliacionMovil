@@ -62,7 +62,7 @@ if (token == null || token.isEmpty ) {
 
       final response = await http.get(
         Uri.parse(
-          'https://cateringmidd.azurewebsites.net/api/Empresa/Mapa',
+          'https://cateringmid.azurewebsites.net/api/Empresa/Mapa',
         ),
       );
   print(response.body);

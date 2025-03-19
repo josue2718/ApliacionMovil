@@ -108,7 +108,7 @@ class Apimireserva {
     isLoading = true;
     final response = await http.get(
       Uri.parse(
-        'https://cateringmidd.azurewebsites.net/api/Reservas/Cliente/$id_cliente',
+        'https://cateringmid.azurewebsites.net/api/Reservas/Cliente/$id_cliente',
       ),
       headers: headers,
     );

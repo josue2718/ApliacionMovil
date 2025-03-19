@@ -146,7 +146,7 @@ class _CompanyState extends State<MenuPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _buildCarousel(),
+                        _buildCarouselempresa(),
                         _buildMenuList(),
                       ],
                     ),
@@ -234,18 +234,25 @@ class _CompanyState extends State<MenuPage> {
     );
   }
 
-  Widget _buildCarousel() {
-    if (apiimagen.imagenes_Empresas.isEmpty) return SizedBox();
-    return CarouselSlider.builder(
+  Widget _buildCarouselempresa() {
+    if (apiimagen.imagenes_Empresas.isNotEmpty) ;
+    return  ClipRRect(
+      borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(30.0),
+        bottomRight: Radius.circular(30.0),
+      ),
+      child:CarouselSlider.builder(
       itemCount: apiimagen.imagenes_Empresas.length,
       itemBuilder: (context, index, realIndex) {
         final imagen = apiimagen.imagenes_Empresas[index];
-        return cardsofertas(link_imagen: imagen.link_imagen);
+        return imagenesempresa(link_imagen: imagen.link_imagen);
       },
       options: CarouselOptions(
-        height: 350,
+
+        height: 360,
+        clipBehavior: Clip.antiAlias,
         viewportFraction: 1.0,
-        enlargeCenterPage: true,
+        enlargeCenterPage: false,
         enableInfiniteScroll: true,
         autoPlay: true,
         autoPlayInterval: const Duration(seconds: 2),
@@ -255,9 +262,8 @@ class _CompanyState extends State<MenuPage> {
           _currentIndexNotifier.value = index;
         },
       ),
-    );
+    ));
   }
-
   Widget _buildMenuList() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -392,25 +398,17 @@ Widget _bottomBar(BuildContext context) {
 }
 
 
-class cardsofertas extends StatelessWidget {
-  cardsofertas({required this.link_imagen});
+
+class imagenesempresa extends StatelessWidget {
+  imagenesempresa({required this.link_imagen});
   final String link_imagen;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.only(
-        bottomLeft: Radius.circular(30.0),
-        bottomRight: Radius.circular(30.0),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30.0),
-            bottomRight: Radius.circular(30.0),
-          ),
-        ),
+    return Container(
+        height: 360,
+        width: 450,
+   
         child: SizedBox(
           child: Image.network(
             link_imagen,
@@ -424,9 +422,7 @@ class cardsofertas extends StatelessWidget {
               return const Icon(Icons.error); // O una imagen de error
             },
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
 

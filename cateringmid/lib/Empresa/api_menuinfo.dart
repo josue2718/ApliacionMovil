@@ -7,7 +7,6 @@ class Gastronomia {
   String idMenuEmpresa;
   int idTipoGastronomia;
   String nombre;
-  double costo;
   String descripcion;
   String linkImagen;
 
@@ -16,7 +15,6 @@ class Gastronomia {
     required this.idMenuEmpresa,
     required this.idTipoGastronomia,
     required this.nombre,
-    required this.costo,
     required this.descripcion,
     required this.linkImagen,
   });
@@ -27,14 +25,13 @@ class Gastronomia {
       idMenuEmpresa: json['id_menu_empresa'],
       idTipoGastronomia: json['id_tipo_gastronomia'],
       nombre: json['nombre'],
-      costo: json['costo'],
       descripcion: json['descripcion'],
       linkImagen: json['link_imagen'],
     );
   }
   @override
   String toString() {
-    return 'gastronomia(nombre: $nombre, costo: $costo, imagen: $linkImagen';
+    return 'gastronomia(nombre: $nombre, imagen: $linkImagen';
   }
 }
 

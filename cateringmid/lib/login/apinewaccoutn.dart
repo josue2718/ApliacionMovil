@@ -62,7 +62,7 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
   Future<void> cuentaconimg(BuildContext context) async {
     try {
       final crear = Provider.of<CrearcuentaProvider>(context, listen: false);
-      final urlImagen = Uri.parse('https://cateringmidd.azurewebsites.net/api/GenerateURLImage/Upload');
+      final urlImagen = Uri.parse('https://cateringmid.azurewebsites.net/api/GenerateURLImage/Upload');
       final responseImagen = await http.post(
         urlImagen,
         headers: {
@@ -110,7 +110,7 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
       print(url);
 
         // 2. Crear el cliente
-        final urlCliente = Uri.parse('https://cateringmidd.azurewebsites.net/api/Cliente');
+        final urlCliente = Uri.parse('https://cateringmid.azurewebsites.net/api/Cliente');
         final responseCliente = await http.post(
           urlCliente,
           headers: {
@@ -142,7 +142,7 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
     }
   }
     Future<void> _generatetoken(BuildContext context, String idCliente) async {
-    final urlToken = Uri.parse('https://cateringmidd.azurewebsites.net/api/AuthClient/login/id');
+    final urlToken = Uri.parse('https://cateringmid.azurewebsites.net/api/AuthClient/login/id');
     final responseToken = await http.post(
       urlToken,
       headers: {
@@ -184,7 +184,7 @@ Future<void> cuentasinimg(BuildContext context) async {
    
       final crear = Provider.of<CrearcuentaProvider>(context, listen: false);
 
-        final urlCliente = Uri.parse('https://cateringmidd.azurewebsites.net/api/Cliente');
+        final urlCliente = Uri.parse('https://cateringmid.azurewebsites.net/api/Cliente');
         final responseCliente = await http.post(
           urlCliente,
           headers: {
@@ -212,7 +212,7 @@ Future<void> cuentasinimg(BuildContext context) async {
 
   }
     Future<void> _generatetoken1(BuildContext context, String idCliente) async {
-    final urlToken = Uri.parse('https://cateringmidd.azurewebsites.net/api/AuthClient/login/id');
+    final urlToken = Uri.parse('https://cateringmid.azurewebsites.net/api/AuthClient/login/id');
     final responseToken = await http.post(
       urlToken,
       headers: {
