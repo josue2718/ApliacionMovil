@@ -73,7 +73,7 @@ if (token == null || token.isEmpty ) {
 
       final response = await http.get(
         Uri.parse(
-          'https://cateringmid.azurewebsites.net/api/Empresa?pageNumber=$Number&pageSize=10&timestamp=${DateTime.now().millisecondsSinceEpoch}',
+          'https://cateringmid.azurewebsites.net/api/Empresa?pageNumber=$Number&pageSize=200&timestamp=${DateTime.now().millisecondsSinceEpoch}',
         ),
         headers: headers,
       );
@@ -107,7 +107,7 @@ if (token == null || token.isEmpty ) {
 
       final response = await http.get(
         Uri.parse(
-          'https://cateringmid.azurewebsites.net/api/Empresa/tipo/$tipo?pageNumber=$Number&pageSize=10&timestamp=${DateTime.now().millisecondsSinceEpoch}',
+          'https://cateringmid.azurewebsites.net/api/Empresa/tipo/$tipo?pageNumber=$Number&pageSize=200&timestamp=${DateTime.now().millisecondsSinceEpoch}',
         ),
         headers: headers,
       );

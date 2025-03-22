@@ -760,123 +760,156 @@ class Options extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: ListView(scrollDirection: Axis.horizontal, children: <Widget>[
-        InkWell(
-          onTap: () => onEspecialidadSelected(1),
-          child: Padding(
-            padding: const EdgeInsets.only(right: 0),
-            child: Column(
-              children: [
-                ClipOval(
-                  child: Image.asset(
-                    'assets/incono.png',
-                    fit: BoxFit.cover,
-                    width: 70, // Ajusta el ancho según tus necesidades
-                    height: 70, //
-                  ),
-                ),
-                const SizedBox(
-                    height: 20), // Espacio entre la imagen y el texto
-                Text('Bodas'),
-              ],
-            ),
+
+         Padding(
+  padding: const EdgeInsets.only(right: 0),
+  child: Column(
+    children: [
+      InkWell(
+        onTap: () => onEspecialidadSelected(1), // Acción solo al presionar el círculo
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF670A0A), // Color de fondo rojo
+            shape: BoxShape.circle, // Hace que el contenedor tenga forma circular
+          ),
+          padding: const EdgeInsets.all(15.0), // Espaciado interno para que el ícono no esté pegado al borde
+          child: Icon(
+            Icons.room_service, // Ícono de cumpleaños
+            size: 38, // Ajusta el tamaño del ícono según tus necesidades
+            color: Colors.white, // Color del ícono (blanco para que contraste con el rojo)
           ),
         ),
+      ),
+      const SizedBox(
+        height: 20, // Espacio entre el ícono y el texto
+      ),
+      Text('Bodas'), // El texto no está envuelto en InkWell, no se activa con el toque
+    ],
+  ),
+),
+
         SizedBox(
           width: 20,
         ),
-        InkWell(
-          onTap: () => onEspecialidadSelected(2),
-          child: Padding(
-            padding: const EdgeInsets.only(right: 0),
-            child: Column(
-              children: [
-                ClipOval(
-                  child: Image.asset(
-                    'assets/incono.png',
-                    fit: BoxFit.cover,
-                    width: 70, // Ajusta el ancho según tus necesidades
-                    height: 70, //
-                  ),
-                ),
-                const SizedBox(
-                    height: 20), // Espacio entre la imagen y el texto
-                Text('XV años'),
-              ],
-            ),
+        
+         Padding(
+  padding: const EdgeInsets.only(right: 0),
+  child: Column(
+    children: [
+      InkWell(
+        onTap: () => onEspecialidadSelected(2), // Acción solo al presionar el círculo
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF670A0A), // Color de fondo rojo
+            shape: BoxShape.circle, // Hace que el contenedor tenga forma circular
+          ),
+          padding: const EdgeInsets.all(15.0), // Espaciado interno para que el ícono no esté pegado al borde
+          child: Icon(
+            Icons.room_service, // Ícono de cumpleaños
+            size: 38, // Ajusta el tamaño del ícono según tus necesidades
+            color: Colors.white, // Color del ícono (blanco para que contraste con el rojo)
           ),
         ),
+      ),
+      const SizedBox(
+        height: 20, // Espacio entre el ícono y el texto
+      ),
+      Text('XV años'), // El texto no está envuelto en InkWell, no se activa con el toque
+    ],
+  ),
+),
+
         SizedBox(
           width: 20,
         ),
-        InkWell(
-          onTap: () => onEspecialidadSelected(3),
-          child: Padding(
-            padding: const EdgeInsets.only(right: 0),
-            child: Column(
-              children: [
-                ClipOval(
-                  child: Image.asset(
-                    'assets/incono.png',
-                    fit: BoxFit.cover,
-                    width: 70, // Ajusta el ancho según tus necesidades
-                    height: 70, //
-                  ),
-                ),
-                const SizedBox(
-                    height: 20), // Espacio entre la imagen y el texto
-                Text('Eventos'),
-              ],
-            ),
+         Padding(
+  padding: const EdgeInsets.only(right: 0),
+  child: Column(
+    children: [
+      InkWell(
+        onTap: () => onEspecialidadSelected(3), // Acción solo al presionar el círculo
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF670A0A), // Color de fondo rojo
+            shape: BoxShape.circle, // Hace que el contenedor tenga forma circular
+          ),
+          padding: const EdgeInsets.all(15.0), // Espaciado interno para que el ícono no esté pegado al borde
+          child: Icon(
+            Icons.room_service, // Ícono de cumpleaños
+            size: 38, // Ajusta el tamaño del ícono según tus necesidades
+            color: Colors.white, // Color del ícono (blanco para que contraste con el rojo)
           ),
         ),
+      ),
+      const SizedBox(
+        height: 20, // Espacio entre el ícono y el texto
+      ),
+      Text('Eventos'), // El texto no está envuelto en InkWell, no se activa con el toque
+    ],
+  ),
+),
+
+       
         SizedBox(
           width: 20,
         ),
-        InkWell(
-          onTap: () => onEspecialidadSelected(4),
-          child: Padding(
-            padding: const EdgeInsets.only(right: 0),
-            child: Column(
-              children: [
-                ClipOval(
-                  child: Image.asset(
-                    'assets/incono.png',
-                    fit: BoxFit.cover,
-                    width: 70, // Ajusta el ancho según tus necesidades
-                    height: 70, //
-                  ),
-                ),
-                const SizedBox(
-                    height: 20), // Espacio entre la imagen y el texto
-                Text('Cumpleaños'),
-              ],
-            ),
+    Padding(
+  padding: const EdgeInsets.only(right: 0),
+  child: Column(
+    children: [
+      InkWell(
+        onTap: () => onEspecialidadSelected(4), // Acción solo al presionar el círculo
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF670A0A), // Color de fondo rojo
+            shape: BoxShape.circle, // Hace que el contenedor tenga forma circular
+          ),
+          padding: const EdgeInsets.all(15.0), // Espaciado interno para que el ícono no esté pegado al borde
+          child: Icon(
+            Icons.room_service, // Ícono de cumpleaños
+            size: 38, // Ajusta el tamaño del ícono según tus necesidades
+            color: Colors.white, // Color del ícono (blanco para que contraste con el rojo)
           ),
         ),
+      ),
+      const SizedBox(
+        height: 20, // Espacio entre el ícono y el texto
+      ),
+      Text('Cumpleaños'), // El texto no está envuelto en InkWell, no se activa con el toque
+    ],
+  ),
+),
+
         SizedBox(
           width: 20,
         ),
-        InkWell(
-          onTap: () => onEspecialidadSelected(5),
-          child: Padding(
-            padding: const EdgeInsets.only(right: 0),
-            child: Column(
-              children: [
-                ClipOval(
-                  child: Image.asset(
-                    'assets/incono.png',
-                    fit: BoxFit.cover,
-                    width: 70, // Ajusta el ancho según tus necesidades
-                    height: 70, //
-                  ),
-                ),
-                const SizedBox(
-                    height: 20), // Espacio entre la imagen y el texto
-                Text('Otros'),
-              ],
-            ),
+         Padding(
+  padding: const EdgeInsets.only(right: 0),
+  child: Column(
+    children: [
+      InkWell(
+        onTap: () => onEspecialidadSelected(5), // Acción solo al presionar el círculo
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF670A0A), // Color de fondo rojo
+            shape: BoxShape.circle, // Hace que el contenedor tenga forma circular
+          ),
+          padding: const EdgeInsets.all(15.0), // Espaciado interno para que el ícono no esté pegado al borde
+          child: Icon(
+            Icons.room_service, // Ícono de cumpleaños
+            size: 38, // Ajusta el tamaño del ícono según tus necesidades
+            color: Colors.white, // Color del ícono (blanco para que contraste con el rojo)
           ),
         ),
+      ),
+      const SizedBox(
+        height: 20, // Espacio entre el ícono y el texto
+      ),
+      Text('Otros'), // El texto no está envuelto en InkWell, no se activa con el toque
+    ],
+  ),
+),
+
       ]),
     );
   }
