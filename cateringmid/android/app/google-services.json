@@ -7,12 +7,21 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:342429130116:android:8a49b2b29c5e83d57ad1d1",
+        "mobilesdk_app_id": "1:342429130116:android:56a564943d62c33f7ad1d1",
         "android_client_info": {
-          "package_name": "com.cateringmid.miapp"
+          "package_name": "com.cateringmid.cateringmid.cateringmid"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "342429130116-e977jvl6ecfmnageosb111t9ju8ak3cq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cateringmid.cateringmid.cateringmid",
+            "certificate_hash": "a54ca4039c6898d84211a596129d30083435725f"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBwXsvhwA4E6bQH3x3C3NZ-H-Fs3FqFN9Y"

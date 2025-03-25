@@ -1,4 +1,5 @@
 import 'package:cateringmid/login/Createaccount.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // Importar el paquete http
 import 'dart:convert'; // Para trabajar con JSON
@@ -47,6 +48,7 @@ class _LoginState extends State<Login> {
   String? _token;
   String? _inicio;
   String? _id;
+   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   Future<void> _saveToken(String token, String inicio, String id) async {
     await _preferencesService.savePreferences(token, inicio, id);
@@ -57,7 +59,17 @@ class _LoginState extends State<Login> {
       
     });
   }
+  Future<void> getFCMToken() async {
+    // Solicita permisos para recibir notificaciones
+    await _firebaseMessaging.requestPermission();
 
+    // Obtiene el token FCM para el dispositivo
+    _firebaseMessaging.getToken().then((token) {
+      if (token != null) {
+        print("Token FCM: $token");
+      }
+    });
+   }
   // Método para verificar los campos y hacer login
   void _login() async {
   if (_formKey.currentState?.validate() ?? false) {
@@ -132,8 +144,32 @@ class _LoginState extends State<Login> {
     Navigator.pop(context); // Cerrar el indicador de carga
 
     if (response != null && response.statusCode == 200) {
+       String tokenfcm = await _firebaseMessaging.getToken() ?? '';
       final data = json.decode(response.body);
+
       if (data != null && data['token'] != null) {
+         final urlLogin = Uri.parse(
+          'https://cateringmid.azurewebsites.net/api/Cliente/token/${data['idCliente']}');
+      final responseLogin = await http.put(
+        urlLogin,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${data['token']}',
+        },
+        body: json.encode({
+          "id_cliente": data['idCliente'],
+          "email": "string", // Cambia por los valores reales
+          "password": "string", // Cambia por los valores reales
+          "nombre": "string", // Cambia por los valores reales
+          "apellido": "string", // Cambia por los valores reales
+          "telefono": "string", // Cambia por los valores reales
+          "link_imagen": "string", // Cambia por los valores reales
+          "tokenfcm": tokenfcm, // Incluye el token FCM
+  "fecha_de_creacion": "2025-03-23T03:17:14.262Z"
+        }),
+      );
+
+      if (responseLogin.statusCode == 204) {
         await _saveToken(data['token'], "true", data['idCliente']);
         Navigator.pushReplacement(
           context,
@@ -145,6 +181,7 @@ class _LoginState extends State<Login> {
         );
       }
     }
+  }
   }
 }
 

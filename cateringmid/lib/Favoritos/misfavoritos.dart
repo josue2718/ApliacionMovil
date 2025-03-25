@@ -143,10 +143,11 @@ class _CompanyState extends State<Misfavoritospage> {
                   ],
                 ),
               backgroundColor: Colors.white,
-              body: RefreshIndicator(
-                onRefresh: _onRefresh,
-                child: SingleChildScrollView(
-                  child: Padding(
+               body: RefreshIndicator(
+              onRefresh: _onRefresh, // Función que se ejecuta al hacer pull para refrescar
+              child: SingleChildScrollView( // Aquí envolvemos todo en un SingleChildScrollView
+                physics: AlwaysScrollableScrollPhysics(), // Siempre habilitar el scroll
+                child: Padding(
                     padding: const EdgeInsets.all(0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,

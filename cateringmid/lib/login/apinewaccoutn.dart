@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../cache.dart';
 import '../home/home.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+
 
 class CrearcuentaProvider with ChangeNotifier {
   String? nombre;
@@ -20,7 +23,7 @@ class CrearcuentaProvider with ChangeNotifier {
 
   // Servicio para guardar el token
   final PreferencesService _preferencesService = PreferencesService();
-
+   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   // Método para actualizar los datos del cliente
   void actualizardato(String Nnombre, String Napellido, String Ntelefono, String Ncorreo, String Npassword, String Nconfirpassword, String Nimagen64, String  Nnameimagen) {
     nombre = Nnombre;
@@ -40,8 +43,20 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
     notifyListeners();
   }
 
+  
 
 
+  Future<void> getFCMToken() async {
+    // Solicita permisos para recibir notificaciones
+    await _firebaseMessaging.requestPermission();
+
+    // Obtiene el token FCM para el dispositivo
+    _firebaseMessaging.getToken().then((token) {
+      if (token != null) {
+        print("Token FCM: $token");
+      }
+    });
+   }
 
   // Método para guardar el token en la memoria local
   Future<void> _saveToken(String token, String id) async {
@@ -106,7 +121,8 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
     );
     try {
       final crear = Provider.of<CrearcuentaProvider>(context, listen: false);
-      
+       String tokenfcm = await _firebaseMessaging.getToken() ?? '';
+    print(tokenfcm);
       print(url);
 
         // 2. Crear el cliente
@@ -125,6 +141,7 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
             "latitud": crear.latidud,
             "longitud": crear.longitud,
             "link_imagen": url,
+            "tokenfcm": tokenfcm, 
           }),
         );
         if (responseCliente.statusCode == 201) {
@@ -168,6 +185,10 @@ void actualizarubicacion(double Nlatidud, double Nlogitud) {
 
 }
 
+
+  
+
+
 Future<void> cuentasinimg(BuildContext context) async {
   showDialog(
       context: context,
@@ -183,7 +204,8 @@ Future<void> cuentasinimg(BuildContext context) async {
     );
    
       final crear = Provider.of<CrearcuentaProvider>(context, listen: false);
-
+ String tokenfcm = await _firebaseMessaging.getToken() ?? '';
+    print(tokenfcm);
         final urlCliente = Uri.parse('https://cateringmid.azurewebsites.net/api/Cliente');
         final responseCliente = await http.post(
           urlCliente,
@@ -199,6 +221,7 @@ Future<void> cuentasinimg(BuildContext context) async {
             "latitud": crear.latidud,
             "longitud": crear.longitud,
             "link_imagen": "",
+             "tokenfcm": tokenfcm, 
           }),
         );
         if (responseCliente.statusCode == 201) {

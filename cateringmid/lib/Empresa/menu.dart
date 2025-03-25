@@ -111,55 +111,57 @@ class _CompanyState extends State<MenuPage> {
       });
     }
   }
+@override
+Widget build(BuildContext context) {
+  return KeyboardDismisser(
+    child: Scaffold(
+      backgroundColor: Colors.white,
+      body: FutureBuilder(
+        future: Future.wait([
+          apiempresaclass.fetchEmpresaIDData(widget.id_empresa),
+          apimenu.fetchMenusEmpresaData(widget.id_empresa),
+          apiimagen.fetchImagenEmpresaData(widget.id_empresa),
+        ]),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildLoadingShimmer(); 
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          }
+          if (apiempresaclass.empresas.isEmpty) {
+            // Puedes agregar algún código si necesitas tratar el caso de empresas vacías
+          }
 
-  @override
-  Widget build(BuildContext context) {
-    return KeyboardDismisser(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: FutureBuilder(
-          future: Future.wait([
-            apiempresaclass.fetchEmpresaIDData(widget.id_empresa),
-            apimenu.fetchMenusEmpresaData(widget.id_empresa),
-            apiimagen.fetchImagenEmpresaData(widget.id_empresa),
-          ]),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return _buildLoadingShimmer(); 
-            }
-            if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: \${snapshot.error}'),
-              );
-            }
-            if (apiempresaclass.empresas.isEmpty) {
-              
-            }
-
-            return Scaffold(
-              backgroundColor: Colors.white,
-              body: RefreshIndicator(
-                onRefresh: _onRefresh,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _buildCarouselempresa(),
-                        _buildMenuList(),
-                      ],
-                    ),
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: RefreshIndicator(
+              onRefresh: _onRefresh, // Función que se ejecuta al hacer pull para refrescar
+              child: SingleChildScrollView( // Aquí envolvemos todo en un SingleChildScrollView
+                physics: AlwaysScrollableScrollPhysics(), // Siempre habilitar el scroll
+                child: Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _buildCarouselempresa(),
+                      _buildMenuList(),
+                    ],
                   ),
                 ),
               ),
-                bottomNavigationBar: _bottomBar(context),
-            );
-          },
-        ),
+            ),
+            bottomNavigationBar: _bottomBar(context),
+          );
+        },
       ),
-    );
-  }
+    ),
+  );
+}
+
+
 
   Widget _buildLoadingShimmer() {
     return SingleChildScrollView(
@@ -321,9 +323,9 @@ Widget _bottomBar(BuildContext context) {
     final ReservaMenu reservamenu =
         ReservaMenu(); // Acceso a los menús seleccionados
     final MenusR menusr = MenusR(); // Donde se guardarán definitivamente
-    if (reservamenu.menu.isEmpty) {
+  /*  if (reservamenu.menu.isEmpty) {
       return SizedBox.shrink(); // No muestra nada si no hay menús seleccionados
-    }
+    }*/
     return Container(
         decoration: BoxDecoration(
           border: Border(

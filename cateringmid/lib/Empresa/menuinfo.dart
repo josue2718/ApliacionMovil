@@ -520,7 +520,9 @@ if(cantidad == 0){
         minPersonas: menu.minPersonas,
         maxPersonas: menu.maxPersonas,
         cantidad: cantidad,
+        
       );
+      
     }
   },
   style: ElevatedButton.styleFrom(

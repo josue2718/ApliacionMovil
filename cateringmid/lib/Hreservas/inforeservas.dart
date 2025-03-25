@@ -52,7 +52,12 @@ class _infohreserva extends State<infohreserva> {
   int pageNumber = 1;
 
   bool personalizar = false;
-
+  Future<void> _onRefresh() async {
+    setState(() {
+      pageNumber++;
+      hasMore = true;
+    });
+  }
   @override
   void initState() {
     super.initState();
@@ -93,7 +98,10 @@ class _infohreserva extends State<infohreserva> {
                 toolbarHeight: 90,
               ),
               backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-              body: SingleChildScrollView(
+               body: RefreshIndicator(
+              onRefresh: _onRefresh, // Función que se ejecuta al hacer pull para refrescar
+              child: SingleChildScrollView( // Aquí envolvemos todo en un SingleChildScrollView
+                physics: AlwaysScrollableScrollPhysics(), // Siempre habilitar el scroll
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -116,6 +124,7 @@ class _infohreserva extends State<infohreserva> {
                   ),
                 ),
               ),
+               )
             );
           },
         ),

@@ -557,9 +557,9 @@ Widget _buildLoadingShimmer() {
     final ReservaMenu reservamenu =
         ReservaMenu(); // Acceso a los menús seleccionados
     final MenusR menusr = MenusR(); // Donde se guardarán definitivamente
-    if (reservamenu.menu.isEmpty) {
+    /*if (reservamenu.menu.isEmpty) {
       return SizedBox.shrink(); // No muestra nada si no hay menús seleccionados
-    }
+    }*/
     return Container(
         decoration: BoxDecoration(
           border: Border(

@@ -1,11 +1,21 @@
+buildscript {
+    ext.kotlin_version = '2.1.20'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.0.4'  // Mantén esta versión o actualízala según tu necesidad
+        classpath 'com.google.gms:google-services:4.3.13' // Plugin de Google Services
+    }
+}
+
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
 }
-
-
 
 rootProject.buildDir = "../build"
 subprojects {

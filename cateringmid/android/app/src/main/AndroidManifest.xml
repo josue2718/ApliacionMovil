@@ -4,7 +4,8 @@
         android:label="cateringmid"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-
+        <service android:name="me.carda.awesome_notifications.notifications.services.NotificationService" android:permission="android.permission.BLUETOOTH_ADMIN" android:exported="true"/>
+        <receiver android:name="me.carda.awesome_notifications.notifications.services.NotificationReceiver" android:exported="true"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCxGkc4ll6wpkhgC2WtCG8EG2q0lCFAskY"/>

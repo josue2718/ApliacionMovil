@@ -65,6 +65,8 @@ class _AcocountState extends State<Createaccount> {
     }
   }
 
+  
+
   bool _isValidBase64(String base64String) {
     return base64String.isNotEmpty && base64String.length % 4 == 0;
   }

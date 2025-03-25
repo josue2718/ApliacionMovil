@@ -30,7 +30,7 @@ apicliente.fetchclienteData();
 
   @override
   Widget build(BuildContext context) {
-    final Apiclienteclass apicliente = Apiclienteclass(); // Instanciamos el servicio de cliente
+   
 
     return Drawer(
       child: FutureBuilder<Map<String, String?>>(
@@ -154,12 +154,7 @@ apicliente.fetchclienteData();
   }
 
   void _navigateToAndRemove(BuildContext context, Widget page) {
-        final PreferencesService _preferencesService = PreferencesService();
-    _preferencesService.clearPreferences();
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => page),
-      (route) => false,
-    );
+        final Apiclienteclass apicliente = Apiclienteclass(); // Instanciamos el servicio de cliente
+        apicliente.fetchlcerrarData(context);
   }
 }
