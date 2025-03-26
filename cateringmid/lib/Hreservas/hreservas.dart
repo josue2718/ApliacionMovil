@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../Reservas/reservamenu.dart';
 import '../Reservas/selectmenu.dart';
 import '../home/api_service.dart';
@@ -52,7 +52,7 @@ class HreservaPage extends StatefulWidget {
 }
 
 class _CompanyState extends State<HreservaPage> {
-
+  final ValueNotifier<bool> _hasNotification = ValueNotifier<bool>(false);
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<int> _currentIndexNotifier = ValueNotifier<int>(0);
   final Apimireserva apimireserva = Apimireserva();
@@ -66,6 +66,10 @@ class _CompanyState extends State<HreservaPage> {
   @override
   void initState() {
     super.initState();
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _hasNotification.value = true; // Marcar que hay una nueva notificación
+    });
+  
   } 
 
   
@@ -132,20 +136,42 @@ class _CompanyState extends State<HreservaPage> {
                   elevation: 0,
                   centerTitle: true,
                   toolbarHeight: 90,
-                  actions: [
-                    TextButton.icon(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Notificaciones')),
-                        );
-                      },
+                   actions: [
+            ValueListenableBuilder<bool>(
+              valueListenable: _hasNotification,
+              builder: (context, hasNotification, child) {
+                return Stack(
+                  children: [
+                    IconButton(
                       icon: const Icon(
                         Icons.notifications,
                         color: Colors.white,
                         size: 30,
                       ),
-                      label: Text(''),
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Notificaciones')),
+                        );
+                        _hasNotification.value = false; // Marcar como leído
+                      },
                     ),
+                    if (hasNotification) // Si hay notificación, mostrar punto rojo
+                      Positioned(
+                        right: 8,
+                        top: 1,
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
                   ],
                 ),
               backgroundColor: Colors.white,

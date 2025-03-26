@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cateringmid/Empresa/empresa.dart';
 import 'package:cateringmid/home/api_mapemp.dart';
 import 'package:cateringmid/menu%20despegable/CustomDrawer.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -18,13 +19,16 @@ class _LocationMapState extends State<LocationMap> {
   LatLng? selectedLocation;
   Position? userLocation;
   final ApiclassMapa mapa = ApiclassMapa();
- 
+   final ValueNotifier<bool> _hasNotification = ValueNotifier<bool>(false);
 
   @override
   void initState() {
     super.initState();
     _getUserLocation();
     mapa.fetchEmpresaData();
+     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _hasNotification.value = true; // Marcar que hay una nueva notificación
+    });
   }
 
   Future<void> _getUserLocation() async {
@@ -50,21 +54,43 @@ class _LocationMapState extends State<LocationMap> {
         elevation: 0,
         centerTitle: true,
         toolbarHeight: 90,
-        actions: [
-          TextButton.icon(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Notificaciones')),
-              );
-            },
-            icon: const Icon(
-              Icons.notifications,
-              color: Colors.white,
-              size: 30,
+          actions: [
+            ValueListenableBuilder<bool>(
+              valueListenable: _hasNotification,
+              builder: (context, hasNotification, child) {
+                return Stack(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.notifications,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Notificaciones')),
+                        );
+                        _hasNotification.value = false; // Marcar como leído
+                      },
+                    ),
+                    if (hasNotification) // Si hay notificación, mostrar punto rojo
+                      Positioned(
+                        right: 8,
+                        top: 1,
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
             ),
-            label: Text(''),
-          ),
-        ],
+                  ],
       ),
       body: userLocation == null
           ? const Center(

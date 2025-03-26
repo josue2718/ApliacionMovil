@@ -1,6 +1,7 @@
 import 'package:cateringmid/Empresa/empresa.dart';
 import 'package:cateringmid/home/Search_api.dart';
 import 'package:cateringmid/menu%20despegable/CustomDrawer.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
@@ -15,11 +16,15 @@ class _SearchPageState extends State<SearchPage> {
       []; // Cambié el tipo de lista a List<EmpresasSearch>
   TextEditingController searchController = TextEditingController();
   bool isLoading = true;
+    final ValueNotifier<bool> _hasNotification = ValueNotifier<bool>(false);
 
   @override
   void initState() {
     super.initState();
     _cargarDatos();
+     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _hasNotification.value = true; // Marcar que hay una nueva notificación
+    });
   }
 
   Future<void> _cargarDatos() async {
@@ -57,17 +62,43 @@ class _SearchPageState extends State<SearchPage> {
           elevation: 0,
           centerTitle: true,
           toolbarHeight: 90,
-          actions: [
-            IconButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Notificaciones')),
+            actions: [
+            ValueListenableBuilder<bool>(
+              valueListenable: _hasNotification,
+              builder: (context, hasNotification, child) {
+                return Stack(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.notifications,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Notificaciones')),
+                        );
+                        _hasNotification.value = false; // Marcar como leído
+                      },
+                    ),
+                    if (hasNotification) // Si hay notificación, mostrar punto rojo
+                      Positioned(
+                        right: 8,
+                        top: 1,
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
                 );
               },
-              icon: const Icon(Icons.notifications,
-                  color: Colors.white, size: 30),
             ),
-          ],
+                  ],
         ),
         backgroundColor: Colors.white,
         body: Padding(

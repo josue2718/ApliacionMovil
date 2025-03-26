@@ -3,6 +3,7 @@ import 'package:cateringmid/home/Search.dart';
 import 'package:cateringmid/home/afertas.dart';
 import 'package:cateringmid/home/api_service.dart';
 import 'package:cateringmid/home/apicliente.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -45,11 +46,15 @@ class _MyHomePageScreenState extends State<MyHomePage> {
   int pageNumber = 1;
   bool inicio = true;
  final Apiclienteclass apicliente = Apiclienteclass();
+   final ValueNotifier<bool> _hasNotification = ValueNotifier<bool>(false);
   @override
   void initState() {
     super.initState();
     api.fetchEmpresaData(pageNumber);
     apicliente.fetchclienteData();  
+     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _hasNotification.value = true; // Marcar que hay una nueva notificación
+    });
   }
  
   void checkAndReload() async {
@@ -161,20 +166,42 @@ class _MyHomePageScreenState extends State<MyHomePage> {
                   elevation: 0,
                   centerTitle: true,
                   toolbarHeight: 90,
-                  actions: [
-                    TextButton.icon(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Notificaciones')),
-                        );
-                      },
+                   actions: [
+            ValueListenableBuilder<bool>(
+              valueListenable: _hasNotification,
+              builder: (context, hasNotification, child) {
+                return Stack(
+                  children: [
+                    IconButton(
                       icon: const Icon(
                         Icons.notifications,
                         color: Colors.white,
                         size: 30,
                       ),
-                      label: Text(''),
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Notificaciones')),
+                        );
+                        _hasNotification.value = false; // Marcar como leído
+                      },
                     ),
+                    if (hasNotification) // Si hay notificación, mostrar punto rojo
+                      Positioned(
+                        right: 8,
+                        top: 1,
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
                   ],
                 ),
                 backgroundColor: const Color.fromARGB(255, 255, 255, 255),

@@ -56,6 +56,7 @@ class _infohreserva extends State<infohreserva> {
     setState(() {
       pageNumber++;
       hasMore = true;
+      apimireserva.fetchMenuinfoData(widget.id_reserva);
     });
   }
   @override
@@ -1385,7 +1386,7 @@ showDialog(
             width: 200, // Ajusta el tamaño si es necesario
             height: 200,
             child: QrImageView(
-              data: "https://www.ejemplo.com",
+              data: "https://cateringempresas.azurewebsites.net/loginconfirmar?id=${id_reserva}",
               version: QrVersions.auto,
               size: 200.0,
             ),

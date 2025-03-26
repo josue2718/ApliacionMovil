@@ -41,7 +41,7 @@ class Apipago {
         "id_empresa": id_empresa,
         "id_reserva": id_reserva,
         "producto": "pago de servicio a ${empresa}",
-        "precio": 50,
+        "precio": precio,
         "cantidad": 1
       });
       crearpago(id_reserva: id_reserva, id_estatus: id_estatus);
